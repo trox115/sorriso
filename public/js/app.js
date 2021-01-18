@@ -597,7 +597,7 @@ var App = function() {
 
             // handle post
             var time = new Date();
-            var message = preparePost('out', (time.getHours() + ':' + time.getMinutes()), "Kiran Patel", '../assets/img/dp', text);
+            var message = preparePost('out', (time.getHours() + ':' + time.getMinutes()), "Kiran Patel", '../img/dp', text);
             message = $(message);
             chatContainer.append(message);
 
@@ -607,7 +607,7 @@ var App = function() {
             // simulate reply
             setTimeout(function() {
                 var time = new Date();
-                var message = preparePost('in', (time.getHours() + ':' + time.getMinutes()), "Jacob Ryan", '../assets/img/user/user5', 'Lorem ipsum doloriam nibh...');
+                var message = preparePost('in', (time.getHours() + ':' + time.getMinutes()), "Jacob Ryan", '../img/user/user5', 'Lorem ipsum doloriam nibh...');
                 message = $(message);
                 chatContainer.append(message);
             }, 2000);

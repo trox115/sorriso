@@ -21,7 +21,7 @@ export default function NavigationMenu() {
               <div className='user-panel'>
                 <div className='row'>
                   <div className='sidebar-userpic'>
-                    <img src='assets/img/dp.jpg' className='img-responsive' alt='' />{' '}
+                    <img src='/img/dp.jpg' className='img-responsive' alt='' />{' '}
                   </div>
                 </div>
                 <div className='profile-usertitle'>

@@ -163,7 +163,7 @@ export default function TopNav() {
                       <li>
                         <a href='#'>
                           <span className='photo'>
-                            <img src='assets/img/user/user2.jpg' className='img-circle' alt='' />{' '}
+                            <img src='img/user/user2.jpg' className='img-circle' alt='' />{' '}
                           </span>
                           <span className='subject'>
                             <span className='from'> António </span>
@@ -175,7 +175,7 @@ export default function TopNav() {
                       <li>
                         <a href='#'>
                           <span className='photo'>
-                            <img src='assets/img/user/user3.jpg' className='img-circle' alt='' />{' '}
+                            <img src='/img/user/user3.jpg' className='img-circle' alt='' />{' '}
                           </span>
                           <span className='subject'>
                             <span className='from'> António </span>
@@ -202,7 +202,7 @@ export default function TopNav() {
                   data-hover='dropdown'
                   data-close-others='true'
                 >
-                  <img alt='' className='img-circle ' src='assets/img/dp.jpg' />
+                  <img alt='' className='img-circle ' src='img/dp.jpg' />
                   <span className='username username-hide-on-mobile'> António </span>
                   <i className='fa fa-angle-down'></i>
                 </a>
