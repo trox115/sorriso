@@ -75,7 +75,7 @@ export default function NavigationMenu() {
               </a>
               <ul className='sub-menu'>
                 <li className='nav-item'>
-                  <a href='email_inbox.html' className='nav-link '>
+                  <a href='/novoCliente' className='nav-link '>
                     <span className='title'>Novo</span>
                   </a>
                 </li>
@@ -94,14 +94,19 @@ export default function NavigationMenu() {
               </a>
               <ul className='sub-menu'>
                 <li className='nav-item'>
-                  <a href='new_booking.html' className='nav-link '>
+                  <Link to='/listaDeStock' className='nav-link '>
                     <span className='title'>Ver Stock</span>
-                  </a>
+                  </Link>
                 </li>
                 <li className='nav-item'>
                   <a href='view_booking.html' className='nav-link '>
                     <span className='title'>Encomendar</span>
                   </a>
+                </li>
+                <li className='nav-item'>
+                  <Link to='/inserirMaterial' className='nav-link '>
+                    <span className='title'>Adicionar Material</span>
+                  </Link>
                 </li>
               </ul>
             </li>
@@ -151,13 +156,70 @@ export default function NavigationMenu() {
               </a>
               <ul className='sub-menu'>
                 <li className='nav-item'>
-                <a href='/verAtividades' className='nav-link'>
+                <a href='/novaMarcacao' className='nav-link'>
                     <span className='title'>Nova Marcação</span>
                   </a>
                 </li>
                 <li className='nav-item'>
-                  <a href='add_room.html' className='nav-link '>
+                  <a href='/agenda' className='nav-link'>
                     <span className='title'>Ver marcações</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li className='nav-item'>
+              <a href='#' className='nav-link nav-toggle'>
+                <i className='material-icons'>gift</i>
+                <span className='title'>Consultas</span>
+                <span className='arrow'></span>
+              </a>
+              <ul className='sub-menu'>
+                <li className='nav-item'>
+                <a href='/novaConsulta' className='nav-link'>
+                    <span className='title'>Nova Consulta</span>
+                  </a>
+                </li>
+                <li className='nav-item'>
+                  <a href='add_room.html' className='nav-link '>
+                    <span className='title'>Ver Consultas</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li className='nav-item'>
+              <a href='#' className='nav-link nav-toggle'>
+                <i className='material-icons'>gift</i>
+                <span className='title'>Serviços</span>
+                <span className='arrow'></span>
+              </a>
+              <ul className='sub-menu'>
+                <li className='nav-item'>
+                <a href='/inserirServico' className='nav-link'>
+                    <span className='title'>Novo Serviço</span>
+                  </a>
+                </li>
+                <li className='nav-item'>
+                  <a href='/verServicos' className='nav-link '>
+                    <span className='title'>Ver Serviços</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li className='nav-item'>
+              <a href='#' className='nav-link nav-toggle'>
+                <i className='material-icons'>gift</i>
+                <span className='title'>Fornecedores</span>
+                <span className='arrow'></span>
+              </a>
+              <ul className='sub-menu'>
+                <li className='nav-item'>
+                <a href='/verAtividades' className='nav-link'>
+                    <span className='title'>Adicionar Fornecedor</span>
+                  </a>
+                </li>
+                <li className='nav-item'>
+                  <a href='add_room.html' className='nav-link '>
+                    <span className='title'>Ver Fornecedores</span>
                   </a>
                 </li>
               </ul>
