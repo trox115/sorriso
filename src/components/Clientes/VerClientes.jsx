@@ -49,20 +49,6 @@ function VerClientes({ users, getClientes, ...props }) {
             <div className="card-box ">
               <div className="card-head">
                 <header>Lista de Contactos</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body ">
                 <div className="tab-pane" id="tab2">

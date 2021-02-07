@@ -11,11 +11,13 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField } from '@material-ui/core';
 import _ from 'lodash';
 import DateFnsUtils from '@date-io/date-fns';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 import {
   MuiPickersUtilsProvider,
-  KeyboardDatePicker,
   KeyboardTimePicker,
 } from '@material-ui/pickers';
+import ptLocale from '@fullcalendar/core/locales/pt';
 
 import SubHeader from '../SubHeader/SubHeader';
 
@@ -45,36 +47,95 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Agenda2({ users, getClientes }) {
-  const [events, setEvents] = useState([
-    {
-      title: 'event 1',
-      start: moment().format('YYYY-MM-DD HH:mm:ss'),
-      end: moment().add(2, 'hours'),
-    },
-  ]);
+function Agenda2({
+  users,
+  getClientes,
+  inserirMarcacao,
+  marcacoes,
+  loadMarcacoes,
+  editarmarcacoes,
+  inserirCliente,
+}) {
+  const [novoUser, setUser] = useState({
+    nome: null,
+    bi: '',
+    nif: '',
+    utente: '',
+    email: '',
+    seguro: '',
+    telefone: '',
+    morada: '',
+    observacoes: '',
+    dataNascimento: '',
+  });
+  const [events, setEvents] = useState([]);
   const [modalStyle] = useState(getModalStyle);
+  const [novoCliente, setNovo] = useState(false);
   const [cliente, setCliente] = useState(null);
   const [openModal, setOpen] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: 'Nova Marcação',
     start: null,
     end: null,
+    cliente: {},
   });
   useEffect(() => {
-    getClientes();
-  }, []);
+    if (_.isEmpty(marcacoes.marcacoes)) {
+      loading();
+      getClientes();
+    }
+    async function loading() {
+      await loadMarcacoes();
+    }
+
+    if (!_.isEmpty(marcacoes.marcacoes) && !_.isEmpty(users.users)) {
+      const novosEventos = [];
+      for (const marcacao of marcacoes.marcacoes) {
+        const user = _.findIndex(users.users, { id: marcacao.cliente_id });
+        novosEventos.push({
+          id: marcacao.id,
+          title: users.users[user].nome,
+          start: marcacao.start,
+          end: marcacao.end,
+          clienteId: users.users[user].id,
+        });
+      }
+      setEvents(novosEventos);
+    }
+  }, [marcacoes, users]);
 
   useEffect(() => {}, [newEvent, events]);
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+    const uId = users.users[users.users.length - 1].id + 1;
+    if (novoUser.nome !== null) {
+      await inserirCliente(novoUser);
+      await getClientes();
+      console.log(users.users);
+      console.log(novoUser);
+      setNewEvent({
+        ...newEvent,
+        cliente: {
+          id: uId,
+          nome: novoUser.nome,
+        },
+      });
+      console.log(newEvent);
+    }
+
     const marcacao = {
-      title: newEvent.title,
+      title: newEvent.cliente?.nome ? newEvent.cliente.nome : novoUser.nome,
       start: moment(newEvent.start).format('YYYY-MM-DD HH:mm'),
       end: moment(newEvent.end).format('YYYY-MM-DD HH:mm'),
+      cliente: newEvent.cliente,
     };
     setEvents([...events, marcacao]);
-    console.log(events);
+    await inserirMarcacao({
+      cliente_id: newEvent.cliente?.id || uId,
+      start: moment(newEvent.start),
+      end: moment(newEvent.end),
+    });
+    setOpen(false);
   };
 
   const handleDateClick = (arg) => {
@@ -88,21 +149,65 @@ function Agenda2({ users, getClientes }) {
   };
   const classes = useStyles();
 
+  const clickEvent = (eventClickInfo) => {
+    setNewEvent({
+      title: eventClickInfo.event.title,
+      start: eventClickInfo.el.fcSeg.start,
+      end: eventClickInfo.el.fcSeg.end,
+    });
+    setOpen(true);
+  };
+
+  const dragEvent = (eventClickInfo) => {
+    console.log(eventClickInfo);
+    const payload = {
+      id: parseInt(eventClickInfo.event.id, 10),
+      cliente_id: eventClickInfo.event.extendedProps.clienteId,
+      start: moment(eventClickInfo.event.start),
+      end: moment(eventClickInfo.event.end),
+    };
+    editarmarcacoes(payload);
+  };
+
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">Nova Marcação</h2>
-      <Autocomplete
-        options={users.users}
-        getOptionLabel={(option) => option.nome}
-        onChange={(event, value) =>
-          setNewEvent({ ...newEvent, title: value.nome })
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={novoCliente}
+            onChange={() => setNovo(!novoCliente)}
+            name="checkedB"
+            color="primary"
+          />
         }
-        onFocus
-        style={{ minWidth: 300 }}
-        renderInput={(params) => (
-          <TextField {...params} label="Cliente" variant="outlined" />
-        )}
+        label="Novo Cliente?"
       />
+      {!novoCliente && (
+        <Autocomplete
+          options={users.users}
+          getOptionLabel={(option) => option.nome}
+          onChange={(event, value) =>
+            setNewEvent({ ...newEvent, cliente: value })
+          }
+          onFocus
+          defaultValue={newEvent.cliente}
+          style={{ minWidth: 300 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Cliente" variant="outlined" />
+          )}
+        />
+      )}
+
+      {novoCliente && (
+        <TextField
+          onChange={(event, value) => setUser({ nome: event.target.value })}
+          name="nome"
+          label="Nome"
+          fullWidth
+          value={novoUser.nome}
+        />
+      )}
       <br />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardTimePicker
@@ -126,6 +231,7 @@ function Agenda2({ users, getClientes }) {
           margin="normal"
           label="Fim"
           fullWidth
+          ampm={false}
           KeyboardButtonProps={{
             'aria-label': 'change time',
           }}
@@ -146,29 +252,24 @@ function Agenda2({ users, getClientes }) {
             <div className="card card-box">
               <div className="card-head">
                 <header>Agenda Dentista</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body ">
                 <FullCalendar
                   plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                   initialView="timeGridWeek"
                   slotMinTime="08:00:00"
+                  headerToolbar={{
+                    left: 'dayGridMonth,timeGridWeek,timeGridDay',
+                    center: 'title',
+                    right: 'prevYear,prev,next,nextYear',
+                  }}
+                  locale={ptLocale}
                   slotMaxTime="21:00:00"
                   Draggable="true"
+                  eventDrop={dragEvent}
+                  eventClick={clickEvent}
                   editable="true"
+                  eventResize={dragEvent}
                   events={events}
                   dateClick={handleDateClick}
                 />
@@ -190,10 +291,15 @@ function Agenda2({ users, getClientes }) {
 }
 const mapState = (state) => ({
   users: state.users,
+  marcacoes: state.marcacoes,
 });
 
 const mapDispatch = (dispatch) => ({
   getClientes: () => dispatch.users.loadClientes(),
+  inserirMarcacao: (obj) => dispatch.marcacoes.inserirMarcacao(obj),
+  loadMarcacoes: () => dispatch.marcacoes.loadMarcacoes(),
+  editarmarcacoes: (obj) => dispatch.marcacoes.editarmarcacoes(obj),
+  inserirCliente: (obj) => dispatch.users.inserirCliente(obj),
 });
 
 export default connect(mapState, mapDispatch)(Agenda2);

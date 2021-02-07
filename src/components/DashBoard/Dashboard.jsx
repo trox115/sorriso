@@ -120,20 +120,6 @@ export default function DashBoard() {
             <div className="card  card-box">
               <div className="card-head">
                 <header>Notificações</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body no-padding height-9">
                 <div className="row">
@@ -181,20 +167,6 @@ export default function DashBoard() {
             <div className="card  card-box">
               <div className="card-head">
                 <header>Ganhos</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body no-padding height-9">
                 <div className="row text-center">
@@ -223,20 +195,6 @@ export default function DashBoard() {
             <div className="card  card-box">
               <div className="card-head">
                 <header>Consultas</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body ">
                 <div className="table-wrap">
@@ -396,20 +354,6 @@ export default function DashBoard() {
             <div className="card  card-box">
               <div className="card-head">
                 <header>Stock</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body ">
                 <div className="table-wrap">
@@ -479,20 +423,6 @@ export default function DashBoard() {
             <div className="card  card-box">
               <div className="card-head">
                 <header>Clientes + rentáveis</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
             </div>
           </div>

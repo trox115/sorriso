@@ -84,20 +84,6 @@ function NovaConsulta({
             <div className="card card-box">
               <div className="card-head">
                 <header>Nova Consulta</header>
-                <div className="tools">
-                  <a
-                    className="fa fa-repeat btn-color box-refresh"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-collapse btn-color fa fa-chevron-down"
-                    href="javascript:;"
-                  ></a>
-                  <a
-                    className="t-close btn-color fa fa-times"
-                    href="javascript:;"
-                  ></a>
-                </div>
               </div>
               <div className="card-body ">
                 {users.users && (

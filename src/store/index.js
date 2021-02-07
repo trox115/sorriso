@@ -7,6 +7,7 @@ import consultas from './consultas';
 import tratamentos from './tratamentos';
 import documentos from './documentos';
 import dentes from './dentes';
+import marcacoes from './marcacoes';
 
 const models = {
   users,
@@ -17,6 +18,7 @@ const models = {
   tratamentos,
   documentos,
   dentes,
+  marcacoes,
 };
 
 const store = init({
