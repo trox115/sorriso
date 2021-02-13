@@ -1,14 +1,15 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
-function VerClientes({ users, getClientes, ...props }) {
+function VerClientes() {
+  const { users } = useSelector((state) => state.users);
+  const dispatch = useDispatch();
   useEffect(() => {
-    if (_.isEmpty(users.users)) {
-      getClientes();
-    }
-  }, [users, getClientes]);
+    dispatch.users.loadClientes();
+  }, [dispatch.users]);
   const colors = [
     'orange',
     'purple',
@@ -53,10 +54,10 @@ function VerClientes({ users, getClientes, ...props }) {
               <div className="card-body ">
                 <div className="tab-pane" id="tab2">
                   <div className="row">
-                    {_.map(users.users, (user) => {
+                    {_.map(users, (user, index) => {
                       const background = Math.floor(Math.random() * 7);
                       return (
-                        <div className="col-md-4">
+                        <div className="col-md-4" key={index}>
                           <div className="card">
                             <div className="m-b-20">
                               <div className="doctor-profile">
@@ -107,12 +108,4 @@ function VerClientes({ users, getClientes, ...props }) {
   );
 }
 
-const mapState = (state) => ({
-  users: state.users,
-});
-
-const mapDispatch = (dispatch) => ({
-  getClientes: () => dispatch.users.loadClientes(),
-});
-
-export default connect(mapState, mapDispatch)(VerClientes);
+export default VerClientes;

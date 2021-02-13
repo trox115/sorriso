@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import { connect } from 'react-redux';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import moment from 'moment';
 import Modal from '@material-ui/core/Modal';
@@ -71,7 +71,6 @@ function Agenda2({
   const [events, setEvents] = useState([]);
   const [modalStyle] = useState(getModalStyle);
   const [novoCliente, setNovo] = useState(false);
-  const [cliente, setCliente] = useState(null);
   const [openModal, setOpen] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: 'Nova Marcação',
@@ -80,14 +79,14 @@ function Agenda2({
     cliente: {},
   });
   useEffect(() => {
-    if (_.isEmpty(marcacoes.marcacoes)) {
-      loading();
-      getClientes();
-    }
     async function loading() {
       await loadMarcacoes();
+      await getClientes();
     }
+    loading();
+  }, [getClientes, loadMarcacoes]);
 
+  useEffect(() => {
     if (!_.isEmpty(marcacoes.marcacoes) && !_.isEmpty(users.users)) {
       const novosEventos = [];
       for (const marcacao of marcacoes.marcacoes) {
@@ -102,7 +101,7 @@ function Agenda2({
       }
       setEvents(novosEventos);
     }
-  }, [marcacoes, users]);
+  }, [getClientes, loadMarcacoes, marcacoes, users]);
 
   useEffect(() => {}, [newEvent, events]);
 

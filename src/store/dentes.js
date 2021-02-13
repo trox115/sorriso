@@ -1,7 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { get, patch, post } from '../Api/api';
-import { apiUrls, replaceUrls } from '../Api/apiUrls';
-import _ from 'lodash';
+import { get } from '../Api/api';
+import { apiUrls } from '../Api/apiUrls';
 
 export default {
   state: {

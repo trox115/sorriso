@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -8,9 +9,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
-  KeyboardTimePicker,
 } from '@material-ui/pickers';
-import moment from 'moment';
 import Dentes from './Dentes';
 
 function Emitir({
@@ -32,7 +31,7 @@ function Emitir({
   const [cliente, setCliente] = useState();
   const [categoria, setCategoria] = useState();
   const [servico, setServico] = useState();
-  const [data, setData] = useState(moment().format('DD/MM/yyyy'));
+
   useEffect(() => {
     if (_.isEmpty(users.users)) {
       getClientes();
@@ -118,28 +117,6 @@ function Emitir({
             <div className="card-box">
               <div className="card-head">
                 <header>Serviços</header>
-                <button
-                  id="panel-button"
-                  className="mdl-button mdl-js-button mdl-button--icon pull-right"
-                  data-upgraded=",MaterialButton"
-                >
-                  <i className="material-icons">more_vert</i>
-                </button>
-                <ul
-                  className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                  data-mdl-for="panel-button"
-                >
-                  <li className="mdl-menu__item">
-                    <i className="material-icons">assistant_photo</i>Action
-                  </li>
-                  <li className="mdl-menu__item">
-                    <i className="material-icons">print</i>Another action
-                  </li>
-                  <li className="mdl-menu__item">
-                    <i className="material-icons">favorite</i>Something else
-                    here
-                  </li>
-                </ul>
               </div>
               <div className="card-body row">
                 <div className="col-lg-6 p-t-20">

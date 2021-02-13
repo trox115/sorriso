@@ -1,5 +1,13 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaceSharp } from '@material-ui/icons';
+import AirlineSeatReclineExtraIcon from '@material-ui/icons/AirlineSeatReclineExtra';
+import DateRangeIcon from '@material-ui/icons/DateRange';
+import VideoLibraryIcon from '@material-ui/icons/VideoLibrary';
+import DescriptionIcon from '@material-ui/icons/Description';
+import RoomServiceIcon from '@material-ui/icons/RoomService';
+import MarkunreadMailboxIcon from '@material-ui/icons/MarkunreadMailbox';
 
 export default function NavigationMenu() {
   return (
@@ -69,7 +77,10 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">email</i>
+                <FaceSharp
+                  className="material-icons"
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Clientes</span>
                 <span className="arrow"></span>
               </a>
@@ -112,7 +123,9 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">vpn_key</i>
+                <DescriptionIcon
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Documentos</span>
                 <span className="arrow"></span>
               </a>
@@ -131,18 +144,20 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">gift</i>
+                <VideoLibraryIcon
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Educação</span>
                 <span className="arrow"></span>
               </a>
               <ul className="sub-menu">
                 <li className="nav-item">
-                  <a href="/verEncomendas" className="nav-link">
+                  <a href="/listaDeVideos" className="nav-link">
                     <span className="title">Ver Vídeos</span>
                   </a>
                 </li>
                 <li className="nav-item">
-                  <a href="/verEncomendas" className="nav-link">
+                  <a href="/inserirVideo" className="nav-link">
                     <span className="title">Inserir Novo</span>
                   </a>
                 </li>
@@ -150,7 +165,9 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">gift</i>
+                <DateRangeIcon
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Marcações</span>
                 <span className="arrow"></span>
               </a>
@@ -169,7 +186,9 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">gift</i>
+                <AirlineSeatReclineExtraIcon
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Consultas</span>
                 <span className="arrow"></span>
               </a>
@@ -177,6 +196,11 @@ export default function NavigationMenu() {
                 <li className="nav-item">
                   <a href="/novaConsulta" className="nav-link">
                     <span className="title">Nova Consulta</span>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a href="/avaliacao" className="nav-link">
+                    <span className="title">Avaliação Inicial</span>
                   </a>
                 </li>
                 <li className="nav-item">
@@ -188,7 +212,9 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">gift</i>
+                <RoomServiceIcon
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Serviços</span>
                 <span className="arrow"></span>
               </a>
@@ -212,7 +238,9 @@ export default function NavigationMenu() {
             </li>
             <li className="nav-item">
               <a href="#" className="nav-link nav-toggle">
-                <i className="material-icons">gift</i>
+                <MarkunreadMailboxIcon
+                  style={{ marginRight: '5px', marginBottom: '3px' }}
+                />
                 <span className="title">Fornecedores</span>
                 <span className="arrow"></span>
               </a>

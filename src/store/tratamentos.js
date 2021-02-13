@@ -1,17 +1,20 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { get, patch, post } from '../Api/api';
+import { get, post } from '../Api/api';
 import { apiUrls, replaceUrls } from '../Api/apiUrls';
-import _ from 'lodash';
 
 export default {
   state: {
     tratamentos: [],
+    cliente: [],
   },
 
   reducers: {
     loaded: (state, payload) => payload,
     setTratamentos(state, payload) {
       return { ...state, tratamentos: payload };
+    },
+    setTratamentosCliente(state, payload) {
+      return { ...state, cliente: payload };
     },
   },
 
@@ -32,7 +35,7 @@ export default {
     async editarConsultas(payload, state) {
       try {
         //this.setLoading(true);
-        const { id, nome, quantidade, custo } = payload;
+        // const { id, nome, quantidade, custo } = payload;
         // if (response && response.status === 200) {
         // }
       } catch (error) {
@@ -40,6 +43,22 @@ export default {
       }
     },
 
+    async loadById(payload, state) {
+      try {
+        console.log('hey');
+        //this.setLoading(true);
+        const { id } = payload;
+        const response = await get(
+          replaceUrls(apiUrls.getTratamentoByUserId, { id })
+        );
+        if (response && response.status === 200) {
+          this.setTratamentosCliente(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+        //TODO: HANDLE ERROR
+      }
+    },
     async inserirTratamentos(payload, state) {
       try {
         //this.setLoading(true);

@@ -1,16 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import InputLabel from '@material-ui/core/InputLabel';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import { toDate, parse, format } from 'date-fns';
-import moment from 'moment';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import SubHeader from '../SubHeader/SubHeader';
@@ -23,7 +14,7 @@ function InserirMaterial({ inserirProduto }) {
   });
 
   const [newProduto, setNew] = useState(novoProduto);
-
+  const history = useHistory();
   useEffect(() => {
     if (!_.isEqual(newProduto, novoProduto)) {
       setProduto(newProduto);
@@ -34,10 +25,10 @@ function InserirMaterial({ inserirProduto }) {
     setNew({ ...newProduto, [event.target.name]: event.target.value });
   };
 
-  const handleClick = (event) => {
+  const handleClick = async (event) => {
     event.preventDefault();
-    console.log(inserirProduto);
-    inserirProduto(novoProduto);
+    await inserirProduto(novoProduto);
+    history.push('/listaDeStock');
   };
 
   return (
@@ -58,8 +49,7 @@ function InserirMaterial({ inserirProduto }) {
                 &nbsp;<i className="fa fa-angle-right"></i>
               </li>
               <li>
-                <a className="parent-item" href="">
-                  {' '}
+                <a className="parent-item" href="/">
                   Material
                 </a>
                 &nbsp;<i className="fa fa-angle-right"></i>
@@ -73,28 +63,6 @@ function InserirMaterial({ inserirProduto }) {
             <div className="card-box">
               <div className="card-head">
                 <header>Material</header>
-                <button
-                  id="panel-button"
-                  className="mdl-button mdl-js-button mdl-button--icon pull-right"
-                  data-upgraded=",MaterialButton"
-                >
-                  <i className="material-icons">more_vert</i>
-                </button>
-                <ul
-                  className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
-                  data-mdl-for="panel-button"
-                >
-                  <li className="mdl-menu__item">
-                    <i className="material-icons">assistant_photo</i>Action
-                  </li>
-                  <li className="mdl-menu__item">
-                    <i className="material-icons">print</i>Another action
-                  </li>
-                  <li className="mdl-menu__item">
-                    <i className="material-icons">favorite</i>Something else
-                    here
-                  </li>
-                </ul>
               </div>
               <div className="card-body row">
                 <div className="col-lg-6 p-t-20">

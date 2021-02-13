@@ -1,41 +1,34 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import _ from 'lodash';
+import React, { useState } from 'react';
 import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import SubHeader from '../SubHeader/SubHeader';
 
-function InserirServico({ categorias, inserirServico, getCategorias }) {
-  const [servico, setServico] = useState({
-    nome: '',
-    categoria: '',
-    custo: '',
-  });
-
-  useEffect(() => {
-    if (_.isEmpty(categorias.categorias)) {
-      getCategorias();
-    }
-  }, [categorias, inserirServico, getCategorias]);
+function Educacao() {
+  const [state, setstate] = useState({ nome: '', link: '' });
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(e.target.id);
-    setServico({ ...servico, [e.target.name]: e.target.value });
-    console.log(servico);
+    setstate({ ...state, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
-    inserirServico(servico);
+    await dispatch.videos.inserirVideo(state);
+    history.push('listaDeVideos');
   };
+
   return (
     <div className="page-content-wrapper">
+      <SubHeader title="Serviços" />
       <div className="page-content">
         <div className="page-bar">
           <div className="page-title-breadcrumb">
             <div className=" pull-left">
-              <div className="page-title">Serviços</div>
+              <div className="page-title">Stock</div>
             </div>
             <ol className="breadcrumb page-breadcrumb pull-right">
               <li>
@@ -47,11 +40,11 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
               </li>
               <li>
                 <a className="parent-item" href="">
-                  Serviços
+                  Videos
                 </a>
                 &nbsp;<i className="fa fa-angle-right"></i>
               </li>
-              <li className="active">Inserir Serviços</li>
+              <li className="active">Inserir Videos</li>
             </ol>
           </div>
         </div>
@@ -59,52 +52,51 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
           <div className="col-sm-12">
             <div className="card-box">
               <div className="card-head">
-                <header>Serviços</header>
+                <header>Material</header>
+                <button
+                  id="panel-button"
+                  className="mdl-button mdl-js-button mdl-button--icon pull-right"
+                  data-upgraded=",MaterialButton"
+                >
+                  <i className="material-icons">more_vert</i>
+                </button>
+                <ul
+                  className="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect"
+                  data-mdl-for="panel-button"
+                >
+                  <li className="mdl-menu__item">
+                    <i className="material-icons">assistant_photo</i>Action
+                  </li>
+                  <li className="mdl-menu__item">
+                    <i className="material-icons">print</i>Another action
+                  </li>
+                  <li className="mdl-menu__item">
+                    <i className="material-icons">favorite</i>Something else
+                    here
+                  </li>
+                </ul>
               </div>
               <div className="card-body row">
                 <div className="col-lg-6 p-t-20">
                   <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
                     <TextField
-                      label="Nome do Serviço"
+                      label="Nome do Vídeo"
                       onChange={handleChange}
                       name="nome"
                       fullWidth
-                      value={servico.nome}
+                      value={state.nome}
                     />
                   </div>
                 </div>
                 <div className="col-lg-3 p-t-20">
                   <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                    <Autocomplete
-                      id="combo-box-demo"
-                      name="categoria"
-                      onChange={(event, value) =>
-                        setServico({ ...servico, categoria: value.id })
-                      }
-                      options={categorias.categorias}
-                      getOptionLabel={(option) => option.nome}
-                      style={{ minWidth: 300 }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          name="categoria"
-                          label="Categoria"
-                          variant="outlined"
-                        />
-                      )}
-                    />{' '}
-                  </div>
-                </div>
-
-                <div className="col-lg-3 p-t-20">
-                  <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
                     <TextField
-                      label="Custo/Total"
+                      label="Link"
                       onChange={handleChange}
-                      name="custo"
-                      type="number"
+                      name="link"
+                      type="text"
                       fullWidth
-                      value={servico.custo}
+                      value={state.link}
                     />
                   </div>
                 </div>
@@ -112,7 +104,7 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
                   <button
                     type="button"
                     className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-                    onClick={handleSubmit}
+                    onClick={handleClick}
                   >
                     Submeter
                   </button>
@@ -132,14 +124,4 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
   );
 }
 
-const mapState = (state) => ({
-  categorias: state.categorias,
-  servicos: state.servicos,
-});
-
-const mapDispatch = (dispatch) => ({
-  inserirServico: (obj) => dispatch.servicos.inserirServico(obj),
-  getCategorias: () => dispatch.categorias.loadCategorias(),
-});
-
-export default connect(mapState, mapDispatch)(InserirServico);
+export default Educacao;

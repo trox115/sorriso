@@ -1,31 +1,47 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import SubHeader from '../SubHeader/SubHeader';
+import { Link } from 'react-router-dom';
 import _ from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
 
-function VerServicos({ getCategorias, getServicos }) {
-  const { servicos } = useSelector((state) => state.servicos);
-  const { categorias } = useSelector((state) => state.categorias);
+function Videos() {
+  const { videos } = useSelector((state) => state.videos);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (_.isEmpty(servicos)) {
-      dispatch.servicos.loadServicos();
-    }
-
-    if (_.isEmpty(categorias)) {
-      dispatch.categorias.loadCategorias();
-    }
-  }, [servicos, categorias, dispatch.servicos, dispatch.categorias]);
+    dispatch.videos.loadVideos();
+  }, [dispatch.videos]);
 
   return (
     <div className="page-content-wrapper">
-      <SubHeader title="Serviços" />
       <div className="page-content">
+        <div className="page-bar">
+          <div className="page-title-breadcrumb">
+            <div className=" pull-left">
+              <div className="page-title">Lista de Stock</div>
+            </div>
+            <ol className="breadcrumb page-breadcrumb pull-right">
+              <li>
+                <i className="fa fa-home"></i>&nbsp;
+                <a className="parent-item" href="index.html">
+                  Home
+                </a>
+                &nbsp;<i className="fa fa-angle-right"></i>
+              </li>
+              <li>
+                <a className="parent-item" href="">
+                  Apps
+                </a>
+                &nbsp;<i className="fa fa-angle-right"></i>
+              </li>
+              <li className="active">Lista de Videos</li>
+            </ol>
+          </div>
+        </div>
         <div className="row">
           <div className="col-sm-12 col-md-9 col-lg-9">
             <div className="card card-box">
               <div className="card-head">
-                <header>Lista de Servicos</header>
+                <header>Videos</header>
               </div>
               <div className="card-body ">
                 <div className="table-scrollable">
@@ -37,31 +53,24 @@ function VerServicos({ getCategorias, getServicos }) {
                       <tr>
                         <th className="center"></th>
                         <th className="center"> Nome </th>
-                        <th className="center"> Categoria </th>
-                        <th className="center"> Custo </th>
                         <th className="center"> Editar</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {_.map(servicos, (servico, index) => {
-                        const categoria = _.find(categorias.categorias, {
-                          id: servico.categoria_id,
-                        });
+                      {_.map(videos, (video, index) => {
                         return (
                           <tr className="odd gradeX" key={index}>
                             <td className="user-circle-img">
                               <img src="assets/img/user/user1.jpg" alt="" />
                             </td>
-                            <td className="center">{servico?.nome}</td>
-                            <td className="center">{categoria?.nome}</td>
-                            <td className="center">{servico?.custo} €</td>
+                            <td className="center">{video.nome}</td>
                             <td className="center">
-                              <a
-                                href="edit_booking.html"
+                              <Link
+                                to={{ pathname: `/video`, query: { video } }}
                                 className="btn btn-tbl-edit btn-xs"
                               >
-                                <i className="fa fa-pencil"></i>
-                              </a>
+                                <i className="fa fa-eye"></i>
+                              </Link>
                               <button className="btn btn-tbl-delete btn-xs">
                                 <i className="fa fa-trash-o "></i>
                               </button>
@@ -81,4 +90,4 @@ function VerServicos({ getCategorias, getServicos }) {
   );
 }
 
-export default VerServicos;
+export default Videos;

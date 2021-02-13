@@ -1,7 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { get, patch, post } from '../Api/api';
 import { apiUrls, replaceUrls } from '../Api/apiUrls';
-import _ from 'lodash';
 
 export default {
   state: {
@@ -20,7 +19,6 @@ export default {
       try {
         //this.setLoading(true);
         const response = await get(apiUrls.marcacoes);
-        console.log(response)
         if (response && response.status === 200) {
           //          await this.setMarcacoes(response)
           this.setMarcacoes(response.data);
@@ -39,7 +37,6 @@ export default {
           replaceUrls(apiUrls.editarMarcacao, { id }),
           { cliente_id, start, end }
         );
-        console.log(response)
         if (response && response.status === 200) {
           console.log('done');
         }

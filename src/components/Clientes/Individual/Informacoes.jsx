@@ -1,63 +1,67 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 import EditarCliente from './EditarCliente';
 import Fatura from './Documentos/Fatura';
 import ReactToPrint from 'react-to-print';
 import _ from 'lodash';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import Table from '../../Consultas/TabelaConsultas';
-import { useHistory } from 'react-router';
 const Dentes = React.lazy(() => import('./Dentes'));
-function Informacoes({
-  users,
-  getClientes,
-  tratamentos,
-  documentos,
-  getOrcamentos,
-  servicos,
-  getServicos,
-  ...props
-}) {
+
+function Informacoes() {
   const inputEl = useRef(null);
-  const [utilizador, setUtilizador] = useState();
   const [boca, setBoca] = useState(false);
-  const [userOrc, setOrc] = useState();
-  const [servico, setServico] = useState();
+  const [treatTooth, setTreatTooth] = useState([]);
+  const dispatch = useDispatch();
+  const {
+    cliente,
+    cliente: { tratamentos },
+  } = useSelector((state) => state.users);
+  const { dentes } = useSelector((state) => state.dentes);
+  const match = useRouteMatch();
+
   useEffect(() => {
-    if (_.isEmpty(users.users)) {
-      getClientes();
-    } else {
-      const { id } = props.match.params;
-      const index = _.findIndex(users.users, { id: parseInt(id, 10) });
-      const user = users.users[index];
-      setUtilizador(user);
+    const loadCliente = async () => {
+      await dispatch.users.getUserInfo({ id: match.params.id });
+      await dispatch.dentes.loadDentes();
+    };
+    loadCliente();
+  }, [dispatch.dentes, dispatch.users, match.params.id]);
+
+  useEffect(() => {
+    function findDentCoords(id) {
+      const index = _.findIndex(dentes, { id });
+      if (index >= 0) {
+        return dentes[index].coords;
+      }
     }
 
-    if (_.isEmpty(documentos.orcamentos)) {
-      getOrcamentos();
-    } else {
-      const filtered = _.filter(documentos.orcamentos, {
-        cliente_id: utilizador?.id,
-      });
-      setOrc(filtered);
+    const setTreated = async () => {
+      const novosDentes = await tratamentos.map((v, i) => ({
+        id: i,
+        preFillColor:
+          v.estado === 'bom'
+            ? 'green'
+            : v.estado === 'inexistente'
+            ? 'black'
+            : 'red',
+        lineWidth: 1,
+        coords: findDentCoords(v.dente_id),
+        shape: 'poly',
+      }));
+      setTreatTooth(novosDentes);
+    };
+
+    if (
+      _.isEmpty(treatTooth) &&
+      !_.isEmpty(tratamentos) &&
+      !_.isEmpty(dentes)
+    ) {
+      setTreated();
     }
-    if (_.isEmpty(servicos.servicos)) {
-      getServicos();
-    } else if (utilizador && userOrc) {
-      const filtered = _.filter(servicos.servicos, {
-        id: userOrc[0].servico_id,
-      });
-      setServico(filtered);
-    }
-  }, [
-    users,
-    getClientes,
-    utilizador,
-    setUtilizador,
-    documentos,
-    getOrcamentos,
-    servicos,
-    getServicos,
-  ]);
+  }, [tratamentos, dentes, setTreatTooth, treatTooth]);
 
   return (
     <div className="page-content-wrapper">
@@ -65,24 +69,8 @@ function Informacoes({
         <div className="page-bar">
           <div className="page-title-breadcrumb">
             <div className=" pull-left">
-              <div className="page-title">Tabs &amp; Accordions</div>
+              <div className="page-title">{cliente.nome}</div>
             </div>
-            <ol className="breadcrumb page-breadcrumb pull-right">
-              <li>
-                <i className="fa fa-home"></i>&nbsp;
-                <a className="parent-item" href="index.html">
-                  Home
-                </a>
-                &nbsp;<i className="fa fa-angle-right"></i>
-              </li>
-              <li>
-                <a className="parent-item" href="">
-                  UI Elements
-                </a>
-                &nbsp;<i className="fa fa-angle-right"></i>
-              </li>
-              <li className="active">Tabs &amp; Accordions</li>
-            </ol>
           </div>
         </div>
         <div className="row">
@@ -90,7 +78,6 @@ function Informacoes({
             <div className="card card-box">
               <div className="card-head">
                 <header>Ficha Cliente</header>
-               
               </div>
               <div className="card-body " id="bar-parent">
                 <div className="row">
@@ -166,7 +153,9 @@ function Informacoes({
                   <div className="col-md-9 col-sm-9 col-9">
                     <div className="tab-content">
                       <div className="tab-pane active" id="tab_6_1">
-                        {utilizador && <EditarCliente user={utilizador} />}
+                        {cliente.cliente && (
+                          <EditarCliente user={cliente.cliente} />
+                        )}
                       </div>
                       <div className="tab-pane fade" id="tab_6_2">
                         <div className="table-scrollable">
@@ -180,17 +169,23 @@ function Informacoes({
                                 <th className="center"> Nome </th>
                                 <th className="center"> Serviço </th>
                                 <th className="center"> Data</th>
-                                <th className="center"> Editar</th>
+                                <th className="center"> Status</th>
                               </tr>
                             </thead>
-                            {utilizador && <Table id={utilizador} />}
+                            {cliente.cliente && <Table id={cliente.cliente} />}
                           </table>
                         </div>
+                        {cliente.divida > 0 && (
+                          <div className="alert alert-danger">
+                            <strong>Total em dívida:</strong>{' '}
+                            {cliente.divida.toFixed(2)} €.
+                          </div>
+                        )}
                       </div>
                       <div className="tab-pane fade" id="tab_6_3"></div>
                       <Suspense fallback={<div> Loading </div>}>
-                        {utilizador && boca && (
-                          <Dentes cliente={utilizador.id} tratamento={null} />
+                        {boca && !_.isEmpty(treatTooth) && (
+                          <Dentes dentes={treatTooth} />
                         )}
                       </Suspense>
                       <div className="tab-pane fade" id="tab_6_4">
@@ -215,7 +210,14 @@ function Informacoes({
                           />
                         </div>
                         <Suspense fallback={<div> Loading </div>}>
-                          {/* <Fatura ref={inputEl} orcamento={userOrc} utilizador={utilizador} servico={servico}/> */}
+                          {/* {servico && (
+                            <Fatura
+                              ref={inputEl}
+                              orcamento={cliente.orcamentos[0]}
+                              utilizador={cliente.cliente}
+                              servico={servico}
+                            />
+                          )} */}
                         </Suspense>
                       </div>
                     </div>
@@ -230,17 +232,4 @@ function Informacoes({
   );
 }
 
-const mapState = (state) => ({
-  users: state.users,
-  tratamentos: state.tratamentos,
-  documentos: state.documentos,
-  servicos: state.servicos,
-});
-
-const mapDispatch = (dispatch) => ({
-  getClientes: () => dispatch.users.loadClientes(),
-  getOrcamentos: () => dispatch.documentos.loadOrcamentos(),
-  getServicos: () => dispatch.servicos.loadServicos(),
-});
-
-export default connect(mapState, mapDispatch)(Informacoes);
+export default Informacoes;

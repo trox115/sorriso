@@ -22,7 +22,6 @@ export async function put(url, payload) {
 }
 
 export async function patch(url, payload) {
-  console.log(url)
   const response = await doRequest(url, payload, 'patch');
   return response;
 }
@@ -33,7 +32,6 @@ export async function get(url) {
 }
 
 export async function remove(url) {
-  console.log(url)
   const response = await doRequest(url, {}, 'delete');
   return response;
 }

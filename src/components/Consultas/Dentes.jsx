@@ -5,11 +5,13 @@ import ImageMapper from 'react-image-mapper';
 import dentes from '../../img/dentes.jpg';
 
 function Editar({ tratamentos, getTratamentos, inserirTratamentos, ...props }) {
+  const [consultas, setConsultas] = useState([]);
   const [selected, setSelected] = useState(null);
   const [dent, setMap] = useState({
     name: 'my-map',
     areas: props.dentes,
   });
+
   useEffect(() => {
     getTratamentos();
     return () => {
@@ -20,12 +22,19 @@ function Editar({ tratamentos, getTratamentos, inserirTratamentos, ...props }) {
   const [tratCli, setTrat] = useState([]);
   useEffect(() => {
     const index = _.findIndex(dent.areas, { id: selected });
-    if (index !== -1 && props.tratamento) {
+    if (index !== -1 && props.tratamento?.categoria) {
       setMap({ ...dent });
       dent.areas[index].preFillColor =
         props.tratamento.categoria === 'Extração'
           ? 'rgba(255, 0, 0, 0.3)'
           : 'green';
+    } else if (index !== -1 && props.estado) {
+      dent.areas[index].preFillColor =
+        props.estado === 'Não Tratado'
+          ? 'rgba(255, 0, 0, 0.3)'
+          : props.estado === 'Tratado'
+          ? 'rgba(0, 230, 64, 0.3)'
+          : 'black';
     }
 
     if (_.isEmpty(tratCli)) {
@@ -45,13 +54,17 @@ function Editar({ tratamentos, getTratamentos, inserirTratamentos, ...props }) {
     setTrat,
     props.tratamento,
     props.cliente,
+    props.estado,
     tratCli,
   ]);
 
   const clicked = (area) => {
     const index = area.id === selected;
+    console.log(area.id);
     if (!index) {
       setSelected(area.id);
+      setConsultas([...consultas, { id: area.id, estado: props.estado }]);
+      console.log(consultas);
     } else {
       const index = _.findIndex(dent.areas, { id: selected });
       dent.areas[index].preFillColor = null;
@@ -59,27 +72,32 @@ function Editar({ tratamentos, getTratamentos, inserirTratamentos, ...props }) {
     }
   };
 
-  const handleSubmit = () => {
-    let estado = 'bom';
-    if (props.tratamento.categoria === 'Extração') {
-      estado = 'Não';
+  const handleSubmit = async () => {
+    for (const t of consultas) {
+      let estado = 'bom';
+      if (t.estado === 'Não Tratado') {
+        estado = 'Não';
+      } else if (t.estado === 'Não Existente') {
+        estado = 'inexistente';
+      }
+      inserirTratamentos({ cliente_id: props.cliente, id: t.id, estado });
     }
-    inserirTratamentos({ cliente_id: props.cliente, id: selected, estado });
   };
 
-  for (let t = 0; t < tratCli.length; t++) {
-    const index = _.findIndex(dent.areas, { id: tratCli[t].dente_id });
-    if (index !== -1) {
-      if (tratCli[t].estado !== 'Não') {
-        dent.areas[index].preFillColor = 'green';
-        console.log('change');
-      } else if (tratCli[t].estado === 'Não') {
-        dent.areas[index].preFillColor = 'red';
-      }
-    }
-  }
+  // for (let t = 0; t < tratCli.length; t++) {
+  //   const index = _.findIndex(dent.areas, { id: tratCli[t].dente_id });
+  //   if (index !== -1) {
+  //     if (tratCli[t].estado !== 'Não') {
+  //       dent.areas[index].preFillColor = 'green';
+  //       console.log('change');
+  //     } else if (tratCli[t].estado === 'Não') {
+  //       dent.areas[index].preFillColor = 'red';
+  //     }
+  //   }
+  // }
 
   if (props.cliente) {
+    console.log(props);
     return (
       <>
         <ImageMapper

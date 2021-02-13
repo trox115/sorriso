@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-function VerStock({ produtos, getProdutos }) {
+function VerStock() {
+  const { produtos } = useSelector((state) => state.produtos);
+  const dispatch = useDispatch();
   useEffect(() => {
-    if (_.isEmpty(produtos.produtos)) {
-      getProdutos();
-      console.log(getProdutos);
-      console.log(produtos);
-    }
-  }, [produtos, getProdutos]);
+    dispatch.produtos.loadProdutos();
+  }, [dispatch.produtos]);
 
   return (
     <div className="page-content-wrapper">
@@ -60,7 +59,7 @@ function VerStock({ produtos, getProdutos }) {
                       </tr>
                     </thead>
                     <tbody>
-                      {_.map(produtos.produtos, (produto, index) => {
+                      {_.map(produtos, (produto, index) => {
                         return (
                           <tr className="odd gradeX" key={index}>
                             <td className="user-circle-img">
@@ -97,12 +96,4 @@ function VerStock({ produtos, getProdutos }) {
   );
 }
 
-const mapState = (state) => ({
-  produtos: state.produtos,
-});
-
-const mapDispatch = (dispatch) => ({
-  getProdutos: () => dispatch.produtos.loadProdutos(),
-});
-
-export default connect(mapState, mapDispatch)(VerStock);
+export default VerStock;

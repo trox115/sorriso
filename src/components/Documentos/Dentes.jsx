@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
-import dentes from '../../img/dentes.jpg';
+import dentesimg from '../../img/dentes.jpg';
 
 function Editar({
   tratamentos,
@@ -12,8 +12,6 @@ function Editar({
   dentes,
   ...props
 }) {
-  const [hoveredArea, setHoveredArea] = useState(null);
-  const [moveMessage, setMessage] = useState('');
   const [selected, setSelected] = useState(null);
   const [dent, setMap] = useState({
     areas: [],
@@ -24,7 +22,7 @@ function Editar({
     return () => {
       setTrat([]);
     };
-  }, []);
+  }, [dentes.dentes, getDentes]);
   const [tratCli, setTrat] = useState([]);
   // useEffect(() => {
   //   const index = _.findIndex(dent.areas, { id: selected });
@@ -46,20 +44,6 @@ function Editar({
   //   }
 
   // }, [dent, selected, setSelected,tratamentos, getTratamentos, setTrat,props.tratamento, props.cliente])
-
-  const moveOnArea = (area, evt) => {
-    const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
-    setMessage(
-      `You moved on ${area.shape} ${area.name} at coords ${JSON.stringify(
-        coords
-      )} !`
-    );
-  };
-
-  const moveOnImage = (evt) => {
-    const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
-    setMessage(`You moved at coords ${JSON.stringify(coords)} !`);
-  };
 
   const clicked = (area) => {
     const index = area.id === selected;
@@ -97,11 +81,9 @@ function Editar({
     return (
       <>
         <ImageMapper
-          src={dentes}
+          src={dentesimg}
           map={dent}
-          onImageMouseMove={(evt) => moveOnImage(evt)}
           onClick={(area) => clicked(area)}
-          onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
           width={500}
         />
         <div class="col-lg-12 p-t-20 text-center">

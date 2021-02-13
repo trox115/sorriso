@@ -3,6 +3,7 @@ export const apiUrls = {
   clientes: '/clientes',
   editarCliente: '/clientes/:id',
   inserirCliente: '/inserirCliente',
+  userInfo: '/userInfo/:id',
   // Produtos
   produtos: '/produtos',
   inserirProduto: '/inserirProduto',
@@ -18,10 +19,12 @@ export const apiUrls = {
   //Consultas
   consultas: '/consultas',
   inserirConsulta: '/inserirConsulta',
+  editarConsulta: '/editarConsulta/:id',
 
   //Tratamentos
   inserirTratamento: '/inserirTratamento',
   tratamentos: '/tratamentos',
+  getTratamentoByUserId: '/tratamentos/cliente/:id',
 
   //Documentos
   docCategoria: '/docCategoria',
@@ -35,6 +38,13 @@ export const apiUrls = {
   inserirMarcacao: '/inserirMarcacao',
   marcacoes: '/marcacoes',
   editarMarcacao: '/editar/marcacao/:id',
+
+  //Pagamentos
+  inserirPagamento: '/inserirPagamento',
+
+  //Videos
+  videos: '/videos',
+  inserirVideo: '/inserVideo',
 };
 
 export const replaceUrls = (url, obj) => {

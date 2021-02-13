@@ -6,12 +6,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { toDate, parse, format } from 'date-fns';
 import moment from 'moment';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -27,7 +24,7 @@ function EditarCliente({ user, editarClientes }) {
     telefone: user.telefone,
     morada: user.morada,
     observacoes: user.observacoes,
-    dataNascimento: moment(user.dataNascimento, 'DD/MM/yyyy').toDate(),
+    dataNascimento: moment(),
   });
 
   const [newUser, setNew] = useState({
@@ -40,7 +37,7 @@ function EditarCliente({ user, editarClientes }) {
     telefone: user.telefone,
     morada: user.morada,
     observacoes: user.observacoes,
-    dataNascimento: moment(user.dataNascimento, 'DD/MM/yyyy').toDate(),
+    dataNascimento: user.dataNascimento,
   });
   const history = useHistory();
 
@@ -157,7 +154,12 @@ function EditarCliente({ user, editarClientes }) {
                   name="dataNascimento"
                   format="dd/MM/yyyy"
                   value={novoUser.dataNascimento}
-                  onChange={handleChange}
+                  onChange={(event, value) =>
+                    setNew({
+                      ...newUser,
+                      dataNascimento: event,
+                    })
+                  }
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}

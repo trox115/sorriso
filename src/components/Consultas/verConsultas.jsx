@@ -8,7 +8,7 @@ function VerConsultas() {
       <SubHeader title="Consultas" />
       <div className="page-content">
         <div className="row">
-          <div className="col-sm-12 col-md-9 col-lg-9">
+          <div className="col-sm-12 col-md-12 col-lg-12">
             <div className="card card-box">
               <div className="card-head">
                 <header>Lista de consultas</header>
@@ -23,9 +23,9 @@ function VerConsultas() {
                       <tr>
                         <th className="center"></th>
                         <th className="center"> Paciente </th>
-                        <th className="center"> Serviço </th>
                         <th className="center"> Data</th>
-                        <th className="center"> Editar</th>
+                        <th className="center"> Serviço </th>
+                        <th className="center"> Status</th>
                       </tr>
                     </thead>
                     <Tabela id="All" />

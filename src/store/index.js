@@ -8,6 +8,8 @@ import tratamentos from './tratamentos';
 import documentos from './documentos';
 import dentes from './dentes';
 import marcacoes from './marcacoes';
+import pagamentos from './pagamentos';
+import videos from './Videos';
 
 const models = {
   users,
@@ -19,6 +21,8 @@ const models = {
   documentos,
   dentes,
   marcacoes,
+  pagamentos,
+  videos,
 };
 
 const store = init({

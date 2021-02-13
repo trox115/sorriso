@@ -8,11 +8,10 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { toDate, parse, format } from 'date-fns';
 import moment from 'moment';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import _ from 'lodash';
-import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import SubHeader from '../SubHeader/SubHeader';
 
 function NovoCliente({ inserirCliente }) {
@@ -26,11 +25,11 @@ function NovoCliente({ inserirCliente }) {
     telefone: '',
     morada: '',
     observacoes: '',
-    dataNascimento: '',
+    dataNascimento: moment(),
   });
-
+  const history = useHistory();
   const [newUser, setNew] = useState(novoUser);
-
+  const dispatch = useDispatch();
   useEffect(() => {
     if (!_.isEqual(newUser, novoUser)) {
       setUser(newUser);
@@ -41,9 +40,10 @@ function NovoCliente({ inserirCliente }) {
     setNew({ ...newUser, [event.target.name]: event.target.value });
   };
 
-  const handleClick = (event) => {
+  const handleClick = async (event) => {
     event.preventDefault();
-    inserirCliente(novoUser);
+    await dispatch.users.inserirCliente(novoUser);
+    history.push('/verClientes');
   };
 
   return (
@@ -154,7 +154,12 @@ function NovoCliente({ inserirCliente }) {
                             name="dataNascimento"
                             format="dd/MM/yyyy"
                             value={novoUser.dataNascimento}
-                            onChange={handleChange}
+                            onChange={(event, value) =>
+                              setNew({
+                                ...newUser,
+                                dataNascimento: event,
+                              })
+                            }
                             KeyboardButtonProps={{
                               'aria-label': 'change date',
                             }}
@@ -219,8 +224,5 @@ function NovoCliente({ inserirCliente }) {
     </div>
   );
 }
-const mapDispatch = (dispatch) => ({
-  inserirCliente: (obj) => dispatch.users.inserirCliente(obj),
-});
 
-export default connect(null, mapDispatch)(NovoCliente);
+export default NovoCliente;

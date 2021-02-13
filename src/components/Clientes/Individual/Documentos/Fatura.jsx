@@ -3,7 +3,7 @@ import logo2 from '../../../../img/logo2.png';
 import moment from 'moment';
 export default class Fatura extends Component {
   render() {
-    const { orcamento, utilizador, servico } = this.props;
+    const { utilizador, servico } = this.props;
     return (
       <div className="row">
         <div className="col-md-12">
@@ -69,7 +69,12 @@ export default class Fatura extends Component {
               <div className="col-md-12">
                 <div className="pull-right m-t-30 text-right">
                   <p>Sub - Total : 96€</p>
-                  <p>Taxa (6%) : {parseInt(servico[0]?.custo, 10) * 0.6}</p>
+                  <p>
+                    Taxa (6%) :{' '}
+                    {servico.length > 0
+                      ? parseInt(servico[0]?.custo, 10) * 0.6
+                      : 0}{' '}
+                  </p>
                   <hr />
                   <h3>
                     <b>Total :</b> 100€

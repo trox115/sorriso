@@ -1,18 +1,21 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { get, patch, post } from '../Api/api';
 import { apiUrls, replaceUrls } from '../Api/apiUrls';
-import _ from 'lodash';
 
 export default {
   state: {
     users: [],
+    cliente: {},
   },
 
   reducers: {
     loaded: (state, payload) => payload,
     setUsers(state, payload) {
-      console.log(payload);
       return { ...state, users: payload };
+    },
+    setCliente(state, payload) {
+      console.log(payload);
+      return { ...state, cliente: payload };
     },
   },
 
@@ -46,6 +49,7 @@ export default {
           numSeguro,
           morada,
           observacoes,
+          dataNascimento,
         } = payload;
         const response = await patch(
           replaceUrls(apiUrls.editarCliente, { id }),
@@ -60,6 +64,7 @@ export default {
             numSeguro,
             morada,
             observacoes,
+            dataNascimento,
           }
         );
         if (response && response.status === 200) {
@@ -84,6 +89,7 @@ export default {
           numSeguro,
           morada,
           observacoes,
+          dataNascimento,
         } = payload;
         const response = await post(replaceUrls(apiUrls.inserirCliente), {
           nome,
@@ -96,12 +102,25 @@ export default {
           numSeguro,
           morada,
           observacoes,
+          dataNascimento,
         });
         if (response && response.status === 200) {
           console.log('done');
         }
       } catch (error) {
         //TODO: HANDLE ERROR
+      }
+    },
+
+    async getUserInfo(payload, state) {
+      try {
+        const { id } = payload;
+        const response = await get(replaceUrls(apiUrls.userInfo, { id }));
+        if (response.status === 200) {
+          this.setCliente(response.data);
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
   }),
