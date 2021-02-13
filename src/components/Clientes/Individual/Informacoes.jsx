@@ -1,12 +1,11 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useRef, useEffect, useState, Suspense } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import EditarCliente from './EditarCliente';
-import Fatura from './Documentos/Fatura';
 import ReactToPrint from 'react-to-print';
 import _ from 'lodash';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useRouteMatch } from 'react-router-dom';
 import Table from '../../Consultas/TabelaConsultas';
 const Dentes = React.lazy(() => import('./Dentes'));
 
