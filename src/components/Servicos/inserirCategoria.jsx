@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function InserirCategoria({ inserirCategorias }) {
   const [categoria, setCategoria] = useState();
@@ -10,9 +12,18 @@ function InserirCategoria({ inserirCategorias }) {
     setCategoria(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    inserirCategorias({ categoria });
+    await inserirCategorias({ categoria });
+    toast.success('Categoria inserida com sucesso', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
@@ -43,6 +54,7 @@ function InserirCategoria({ inserirCategorias }) {
           </div>
         </div>
         <div className="row">
+          <ToastContainer />
           <div className="col-sm-12">
             <div className="card-box">
               <div className="card-head">

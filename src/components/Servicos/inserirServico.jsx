@@ -20,9 +20,7 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
 
   const handleChange = (e) => {
     e.preventDefault();
-    console.log(e.target.id);
     setServico({ ...servico, [e.target.name]: e.target.value });
-    console.log(servico);
   };
 
   const handleSubmit = (e) => {

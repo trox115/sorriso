@@ -5,12 +5,19 @@ import { apiUrls } from '../Api/apiUrls';
 export default {
   state: {
     dentes: [],
+    denteSelecionado: [],
   },
 
   reducers: {
     loaded: (state, payload) => payload,
     setdentes(state, payload) {
       return { ...state, dentes: payload };
+    },
+    setSelecionado(state, payload) {
+      return {
+        ...state,
+        denteSelecionado: [...state.denteSelecionado, payload],
+      };
     },
   },
 
@@ -24,6 +31,14 @@ export default {
           this.setdentes(response.data);
           //          this.setLoading(false);
         }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
+    async selecionarDente(payload, state) {
+      try {
+        //this.setLoading(true);
+        this.setSelecionado(payload);
       } catch (error) {
         //TODO: HANDLE ERROR
       }

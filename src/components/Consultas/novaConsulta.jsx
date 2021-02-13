@@ -7,7 +7,6 @@ import { connect, useDispatch, useSelector } from 'react-redux';
 import Dentes from '../Dentes/Dentes';
 
 function NovaConsulta({
-  users,
   produtos,
   getClientes,
   getProdutos,
@@ -25,74 +24,64 @@ function NovaConsulta({
   const [cliente, setCliente] = useState();
   const [tratamento, setTratamento] = useState();
   const dispatch = useDispatch();
-  const { dentes } = useSelector((state) => state.dentes);
-
+  const { users } = useSelector((state) => state.users);
   useEffect(() => {
-    getClientes();
+    dispatch.users.loadClientes();
     getProdutos();
     getServicos();
     getCategorias();
-    if (dentes.length <= 0) {
-      dispatch.dentes.loadDentes();
-    }
-  }, [
-    dentes.length,
-    dispatch.dentes,
-    getCategorias,
-    getClientes,
-    getProdutos,
-    getServicos,
-  ]);
-  const maisMaterial = () => {
-    const newMaterial = numEq;
-    newMaterial.push(1);
-    addEquipamento([...newMaterial]);
-  };
+  }, [getCategorias, getClientes, getProdutos, getServicos]);
 
-  const handleChange = (e) => {
-    setValue2({ ...value2, [e.target.name]: e.target.value });
-  };
+  // const maisMaterial = () => {
+  //   const newMaterial = numEq;
+  //   newMaterial.push(1);
+  //   addEquipamento([...newMaterial]);
+  // };
 
-  const imageChange = (e) => {
-    setImage({ image: e.target.files[0] });
-  };
+  // const handleChange = (e) => {
+  //   setValue2({ ...value2, [e.target.name]: e.target.value });
+  // };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const obj = {};
-    _.map(Object.values(value2), (numero, idx, i, a) => {
-      obj[value1[idx]] = numero;
-    });
-    for (const n in obj) {
-      const p = _.find(produtos.produtos, { id: parseInt(n, 10) });
-      const payload = {
-        id: parseInt(n, 10),
-        quantidade: p?.quantidade - parseInt(obj[n], 10),
-      };
-      editarProdutos(payload);
-    }
-    const formData = new FormData();
-    formData.append('cliente_id', cliente.id);
-    formData.append('servico_id', 1);
-    if (image?.image) {
-      formData.append('image', image.image);
-    }
-    dispatch.consultas.inserirConsulta(formData);
-  };
+  // const imageChange = (e) => {
+  //   setImage({ image: e.target.files[0] });
+  // };
 
-  let options = [];
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   const obj = {};
+  //   _.map(Object.values(value2), (numero, idx, i, a) => {
+  //     obj[value1[idx]] = numero;
+  //   });
+  //   for (const n in obj) {
+  //     const p = _.find(produtos.produtos, { id: parseInt(n, 10) });
+  //     const payload = {
+  //       id: parseInt(n, 10),
+  //       quantidade: p?.quantidade - parseInt(obj[n], 10),
+  //     };
+  //     editarProdutos(payload);
+  //   }
+  //   const formData = new FormData();
+  //   formData.append('cliente_id', cliente.id);
+  //   formData.append('servico_id', 1);
+  //   if (image?.image) {
+  //     formData.append('image', image.image);
+  //   }
+  //   dispatch.consultas.inserirConsulta(formData);
+  // };
 
-  if (servicos.servicos && categorias.categorias) {
-    options = _.map(servicos.servicos, (option) => {
-      const firstLetter = option.nome[0].toUpperCase();
-      const cat = _.find(categorias.categorias, { id: option.categoria_id });
-      return {
-        firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-        categoria: cat?.nome,
-        ...option,
-      };
-    });
-  }
+  // let options = [];
+
+  // if (servicos.servicos && categorias.categorias) {
+  //   options = _.map(servicos.servicos, (option) => {
+  //     const firstLetter = option.nome[0].toUpperCase();
+  //     const cat = _.find(categorias.categorias, { id: option.categoria_id });
+  //     return {
+  //       firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+  //       categoria: cat?.nome,
+  //       ...option,
+  //     };
+  //   });
+  // }
 
   return (
     <div className="page-content-wrapper">
@@ -106,10 +95,10 @@ function NovaConsulta({
               </div>
               <div className="card-body" style={{ display: 'flex' }}>
                 <div className="col-lg-6 p-t-20">
-                  {users.users && (
+                  {users && (
                     <Autocomplete
                       id="combo-box-demo"
-                      options={users.users}
+                      options={users}
                       onChange={(event, value) => setCliente(value)}
                       onClick={() => setCliente()}
                       getOptionLabel={(option) => option.nome}
@@ -151,14 +140,14 @@ function NovaConsulta({
                           </div>
                           <div className="col-lg-6 p-t-20 col-md-6">
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                              <TextField
+                              {/* <TextField
                                 id="standard-basic"
                                 type="number"
                                 fullWidth
                                 label="Número utilizado"
                                 name={`material-${index}`}
                                 onChange={handleChange}
-                              />
+                              /> */}
                             </div>
                           </div>
                         </>
@@ -166,7 +155,7 @@ function NovaConsulta({
                     })}
                   <div className="col-lg-12 p-t-20">
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                      <Autocomplete
+                      {/* <Autocomplete
                         id="grouped-demo"
                         options={options.sort(
                           (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
@@ -183,7 +172,7 @@ function NovaConsulta({
                             variant="outlined"
                           />
                         )}
-                      />
+                      /> */}
                     </div>
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
                       <textarea
@@ -198,26 +187,18 @@ function NovaConsulta({
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
-                  {cliente && (
-                    <Dentes
-                      tratamento={tratamento}
-                      dentes={dentes}
-                      cliente={cliente?.id}
-                    />
-                  )}
+                  {true && <Dentes cliente={cliente} />}
                 </div>
                 <div class="col-lg-12 p-t-20 text-center">
                   <button
                     type="button"
                     className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-                    onClick={handleSubmit}
                   >
                     Gravar
                   </button>
                   <button
                     type="button"
                     className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
-                    onClick={maisMaterial}
                   >
                     Mais Material
                   </button>
@@ -234,7 +215,6 @@ function NovaConsulta({
                       id="contained-button-file"
                       multiple
                       type="file"
-                      onChange={imageChange}
                     />
                   </label>
                 </div>
