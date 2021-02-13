@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
@@ -7,12 +7,13 @@ import dentesimg from '../../img/dentes.jpg';
 
 function Editar({ ...props }) {
   const { dentes } = useSelector((state) => state.dentes);
-
+  console.log(props);
   const {
     cliente,
     cliente: { tratamentos },
   } = useSelector((state) => state.users);
   const { denteSelecionado } = useSelector((state) => state.dentes);
+  const { produtos } = useSelector((state) => state.produtos);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -59,6 +60,7 @@ function Editar({ ...props }) {
 
   const handleSubmit = async () => {
     const idCliente = cliente.cliente.id;
+    const { value1, value2 } = props;
     for (const selecionado of denteSelecionado) {
       let estado = 'bom';
       if (selecionado.servico.categoria_id === 2) {
@@ -72,30 +74,28 @@ function Editar({ ...props }) {
       await dispatch.tratamentos.inserirTratamentos(payload);
       const formData = new FormData();
       formData.append('cliente_id', idCliente);
-      console.log(idCliente);
-
       formData.append('servico_id', selecionado.servico.id);
       if (props.image?.image) {
         formData.append('image', props.image.image);
       }
-      console.log(formData);
       await dispatch.consultas.inserirConsulta(formData);
     }
     await dispatch.dentes.removeDentes();
-    history.push('/');
+    const obj = {};
+    _.map(Object.values(value2), (numero, idx, i, a) => {
+      obj[value1[idx]] = numero;
+    });
+    for (const n in obj) {
+      const p = _.find(produtos, { id: parseInt(n, 10) });
+      const payload = {
+        id: parseInt(n, 10),
+        quantidade: p?.quantidade - parseInt(obj[n], 10),
+      };
+      await dispatch.produtos.editarProdutos(payload);
+    }
+    history.push('/verConsultas');
   };
 
-  // for (let t = 0; t < tratCli.length; t++) {
-  //   const index = _.findIndex(dent.areas, { id: tratCli[t].dente_id });
-  //   if (index !== -1) {
-  //     if (tratCli[t].estado !== 'Não') {
-  //       dent.areas[index].preFillColor = 'green';
-  //       console.log('change');
-  //     } else if (tratCli[t].estado === 'Não') {
-  //       dent.areas[index].preFillColor = 'red';
-  //     }
-  //   }
-  // }  };
   return (
     <>
       {!_.isEmpty(dentes) && (

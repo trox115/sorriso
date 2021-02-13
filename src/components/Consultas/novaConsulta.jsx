@@ -15,8 +15,6 @@ function NovaConsulta({
   getServicos,
   categorias,
   getCategorias,
-  editarProdutos,
-  inserirConsulta,
 }) {
   const [numEq, addEquipamento] = useState([]);
   const [value2, setValue2] = useState({});
@@ -45,22 +43,6 @@ function NovaConsulta({
 
   const imageChange = (e) => {
     setImage({ image: e.target.files[0] });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const obj = {};
-    _.map(Object.values(value2), (numero, idx, i, a) => {
-      obj[value1[idx]] = numero;
-    });
-    for (const n in obj) {
-      const p = _.find(produtos.produtos, { id: parseInt(n, 10) });
-      const payload = {
-        id: parseInt(n, 10),
-        quantidade: p?.quantidade - parseInt(obj[n], 10),
-      };
-      editarProdutos(payload);
-    }
   };
 
   let options = [];
@@ -122,7 +104,6 @@ function NovaConsulta({
                                 onChange={(event, value) =>
                                   setValue1([...value1, value.id])
                                 }
-                                onFocus
                                 style={{ width: '50%' }}
                                 renderInput={(params) => (
                                   <TextField
@@ -167,7 +148,7 @@ function NovaConsulta({
                           />
                         )}
                       />
-                    </div>{' '}
+                    </div>
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
                       <textarea
                         className="mdl-textfield__input"
@@ -204,6 +185,8 @@ function NovaConsulta({
                       cliente={cliente.id}
                       servico={tratamento}
                       image={image}
+                      value1={value1}
+                      value2={value2}
                     />
                   )}
                 </div>
