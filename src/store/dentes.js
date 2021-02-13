@@ -47,12 +47,12 @@ export default {
         const { tipo, id } = payload;
         this.setSelecionado(payload);
         const { dentes } = JSON.parse(JSON.stringify(state.dentes));
-        const index = _.findIndex(dentes, { id: id });
+        const index = _.findIndex(dentes, { dente_id: id });
         dentes[index].preFillColor =
-          tipo === 1 ? 'green' : 'rgba(0, 0, 0, 0.5)';
-        this.inserirNovosDentes(dentes);
+          tipo === 1 ? 'rgba(0, 230, 64, 0.5)' : 'rgba(0, 0, 0, 0.5)';
+        await this.inserirNovosDentes(dentes);
       } catch (error) {
-        //TODO: HANDLE ERROR
+        console.log(error);
       }
     },
     async removeDentes(payload, state) {

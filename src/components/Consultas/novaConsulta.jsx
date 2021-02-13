@@ -59,13 +59,6 @@ function NovaConsulta({
       };
       editarProdutos(payload);
     }
-    const formData = new FormData();
-    formData.append('cliente_id', cliente.id);
-    formData.append('servico_id', 1);
-    if (image?.image) {
-      formData.append('image', image.image);
-    }
-    dispatch.consultas.inserirConsulta(formData);
   };
 
   let options = [];
@@ -172,7 +165,7 @@ function NovaConsulta({
                           />
                         )}
                       />
-                    </div>
+                    </div>{' '}
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
                       <textarea
                         className="mdl-textfield__input"
@@ -183,41 +176,40 @@ function NovaConsulta({
                         Observações
                       </label>
                     </div>
+                    <div class="col-lg-12 p-t-20 text-center">
+                      <button
+                        type="button"
+                        className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
+                      >
+                        Mais Material
+                      </button>
+                      <input
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        id="raised-button-file"
+                        multiple
+                        type="file"
+                      />
+                      <label htmlFor="raised-button-file">
+                        <input
+                          accept="image/*"
+                          id="contained-button-file"
+                          multiple
+                          type="file"
+                          onChange={imageChange}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
                   {cliente && (
-                    <Dentes cliente={cliente.id} servico={tratamento} />
-                  )}
-                </div>
-                <div class="col-lg-12 p-t-20 text-center">
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-                  >
-                    Gravar
-                  </button>
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
-                  >
-                    Mais Material
-                  </button>
-                  <input
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    id="raised-button-file"
-                    multiple
-                    type="file"
-                  />
-                  <label htmlFor="raised-button-file">
-                    <input
-                      accept="image/*"
-                      id="contained-button-file"
-                      multiple
-                      type="file"
+                    <Dentes
+                      cliente={cliente.id}
+                      servico={tratamento}
+                      image={image}
                     />
-                  </label>
+                  )}
                 </div>
               </div>
             </div>

@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import _ from 'lodash';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
+import { useHistory } from 'react-router-dom';
 import dentesimg from '../../img/dentes.jpg';
 
 function Editar({ ...props }) {
   const { dentes } = useSelector((state) => state.dentes);
+
   const {
     cliente,
     cliente: { tratamentos },
   } = useSelector((state) => state.users);
   const { denteSelecionado } = useSelector((state) => state.dentes);
   const dispatch = useDispatch();
+  const history = useHistory();
 
   useEffect(() => {
     dispatch.dentes.loadDentes();
@@ -31,7 +34,7 @@ function Editar({ ...props }) {
           ? 'black'
           : 'red';
       _.map(novos, (dente) => {
-        if (dente.id === tratamento.id) {
+        if (dente.id === tratamento.dente_id) {
           dente['preFillColor'] = preFillColor;
         }
       });
@@ -41,23 +44,45 @@ function Editar({ ...props }) {
 
   const clicked = async (area) => {
     const categoria = props.servico.categoria_id;
-    const selected = { id: area.id, tipo: categoria === 2 ? 0 : 1 };
+    const selected = {
+      id: area.id,
+      tipo: categoria === 2 ? 0 : 1,
+      servico: props.servico,
+    };
     const index = _.findIndex(denteSelecionado, { id: area.id });
     if (index > -1) {
-      console.log(area.id);
       dispatch.dentes.removeSelected({ id: area.id });
     } else {
       dispatch.dentes.selecionarDente(selected);
     }
-    //setSelected(null);
   };
 
-  const handleSubmit = () => {
-    let estado = 'bom';
-    if (props.tratamento.categoria === 'Extração') {
-      estado = 'Não';
+  const handleSubmit = async () => {
+    const idCliente = cliente.cliente.id;
+    for (const selecionado of denteSelecionado) {
+      let estado = 'bom';
+      if (selecionado.servico.categoria_id === 2) {
+        estado = 'inexistente';
+      }
+      const payload = {
+        cliente_id: cliente.cliente.id,
+        estado,
+        id: selecionado.id,
+      };
+      await dispatch.tratamentos.inserirTratamentos(payload);
+      const formData = new FormData();
+      formData.append('cliente_id', idCliente);
+      console.log(idCliente);
+
+      formData.append('servico_id', selecionado.servico.id);
+      if (props.image?.image) {
+        formData.append('image', props.image.image);
+      }
+      console.log(formData);
+      await dispatch.consultas.inserirConsulta(formData);
     }
-    //inserirTratamentos({ cliente_id: props.cliente, id: selected, estado });
+    await dispatch.dentes.removeDentes();
+    history.push('/');
   };
 
   // for (let t = 0; t < tratCli.length; t++) {
@@ -103,14 +128,4 @@ function Editar({ ...props }) {
   );
 }
 
-const mapState = (state) => ({
-  produtos: state.produtos,
-  tratamentos: state.tratamentos,
-});
-
-const mapDispatch = (dispatch) => ({
-  getProdutos: () => dispatch.produtos.loadProdutos(),
-  inserirTratamentos: (obj) => dispatch.tratamentos.inserirTratamentos(obj),
-  getTratamentos: () => dispatch.tratamentos.loadTratamentos(),
-});
-export default connect(mapState, mapDispatch)(Editar);
+export default Editar;
