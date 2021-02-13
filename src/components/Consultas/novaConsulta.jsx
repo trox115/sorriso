@@ -4,7 +4,9 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SubHeader from '../SubHeader/SubHeader';
 import _ from 'lodash';
 import { connect, useDispatch, useSelector } from 'react-redux';
+
 import Dentes from '../Dentes/Dentes';
+import './novaConsulta.css';
 
 function NovaConsulta({
   produtos,
@@ -87,30 +89,32 @@ function NovaConsulta({
               </div>
               <div className="card-body" style={{ display: 'flex' }}>
                 <div className="col-lg-6 p-t-20">
-                  {users && (
-                    <Autocomplete
-                      id="combo-box-demo"
-                      options={users}
-                      onChange={(event, value) => setCliente(value)}
-                      onClick={() => setCliente()}
-                      getOptionLabel={(option) => option.nome}
-                      style={{ minWidth: 300 }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Cliente"
-                          variant="outlined"
-                        />
-                      )}
-                    />
-                  )}
+                  <div className="col-lg-12 p-t-20">
+                    {users && (
+                      <Autocomplete
+                        id="combo-box-demo"
+                        options={users}
+                        onChange={(event, value) => setCliente(value)}
+                        onClick={() => setCliente()}
+                        getOptionLabel={(option) => option.nome}
+                        style={{ minWidth: 300 }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Cliente"
+                            variant="outlined"
+                          />
+                        )}
+                      />
+                    )}
+                  </div>
 
                   {produtos &&
                     _.map(numEq, (num, index) => {
                       return (
                         <>
-                          <div className="col-lg-6 p-t-20" key={index}>
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                          <div className="col-lg-12 p-t-20" key={index}>
+                            <div className="text-container">
                               <Autocomplete
                                 id={index}
                                 options={produtos.produtos}
@@ -119,7 +123,7 @@ function NovaConsulta({
                                   setValue1([...value1, value.id])
                                 }
                                 onFocus
-                                style={{ minWidth: 300 }}
+                                style={{ width: '50%' }}
                                 renderInput={(params) => (
                                   <TextField
                                     {...params}
@@ -128,14 +132,12 @@ function NovaConsulta({
                                   />
                                 )}
                               />
-                            </div>
-                          </div>
-                          <div className="col-lg-6 p-t-20 col-md-6">
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+
                               <TextField
                                 id="standard-basic"
                                 type="number"
                                 fullWidth
+                                style={{ width: '25%' }}
                                 label="Número utilizado"
                                 name={`material-${index}`}
                                 onChange={handleChange}
@@ -180,16 +182,10 @@ function NovaConsulta({
                       <button
                         type="button"
                         className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
+                        onClick={maisMaterial}
                       >
                         Mais Material
                       </button>
-                      <input
-                        accept="image/*"
-                        style={{ display: 'none' }}
-                        id="raised-button-file"
-                        multiple
-                        type="file"
-                      />
                       <label htmlFor="raised-button-file">
                         <input
                           accept="image/*"
