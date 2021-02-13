@@ -8,7 +8,6 @@ import Dentes from '../Dentes/Dentes';
 
 function NovaConsulta({
   produtos,
-  getClientes,
   getProdutos,
   servicos,
   getServicos,
@@ -30,7 +29,7 @@ function NovaConsulta({
     getProdutos();
     getServicos();
     getCategorias();
-  }, [getCategorias, getClientes, getProdutos, getServicos]);
+  }, [dispatch.users, getCategorias, getProdutos, getServicos]);
 
   // const maisMaterial = () => {
   //   const newMaterial = numEq;
@@ -187,7 +186,7 @@ function NovaConsulta({
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
-                  {true && <Dentes cliente={cliente} />}
+                  {cliente && <Dentes cliente={cliente.id} />}
                 </div>
                 <div class="col-lg-12 p-t-20 text-center">
                   <button

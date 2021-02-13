@@ -5,27 +5,27 @@ import ImageMapper from 'react-image-mapper';
 import dentesimg from '../../img/dentes.jpg';
 
 function Editar({ ...props }) {
-  const [dent, setMap] = useState({
-    name: 'my-map',
-    areas: props.dentes,
-  });
-
   const { dentes } = useSelector((state) => state.dentes);
   const {
     cliente,
     cliente: { tratamentos },
   } = useSelector((state) => state.users);
-  const [tratCli, setTrat] = useState([]);
   // const { denteSelecionado } = useSelector((state) => state.dentes);
   const dispatch = useDispatch();
-  console.log(props.cliente.id);
-
+  const [newD, setNew] = useState(dentes);
   useEffect(() => {
     dispatch.dentes.loadDentes();
-    dispatch.users.getUserInfo({ id: props.cliente.id });
-  }, []);
+  }, [dispatch.dentes, props.cliente, cliente]);
 
   useEffect(() => {
+    console.log('cliente');
+
+    dispatch.users.getUserInfo({ id: props.cliente });
+    return dispatch.dentes.removeDentes();
+  }, [dispatch.dentes, dispatch.users, props.cliente]);
+
+  useEffect(() => {
+    const novos = dentes;
     _.map(tratamentos, (tratamento, index) => {
       const preFillColor =
         tratamento.estado === 'bom'
@@ -33,13 +33,14 @@ function Editar({ ...props }) {
           : tratamento.estado === 'inexistente'
           ? 'black'
           : 'red';
-      _.map(dentes, (dente, indes) => {
+      _.map(novos, (dente) => {
         if (dente.id === tratamento.id) {
           dente['preFillColor'] = preFillColor;
         }
       });
     });
-  }, [tratamentos, dentes]);
+    dispatch.dentes.inserirNovosDentes(novos);
+  }, [tratamentos, cliente, dispatch.dentes]);
 
   const clicked = async (area) => {
     const selected = { id: area.id, tipo: 1 };
@@ -66,7 +67,6 @@ function Editar({ ...props }) {
   //     }
   //   }
   // }  };
-  console.log(props);
   return (
     <>
       {!_.isEmpty(dentes) && (
