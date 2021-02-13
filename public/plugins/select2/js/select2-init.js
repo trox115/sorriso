@@ -1,6 +1,7 @@
 function format(state) {
+
     if (!state.id) return state.text; 
-    return "<img class='flag' src='img/flags/" + state.id.toLowerCase() + ".png'/> &nbsp;" + state.text;
+    return "<img className='flag' src='img/flags/" + state.id.toLowerCase() + ".png'/> &nbsp;" + state.text;
 }
 
 var placeholder = "Select a State";
