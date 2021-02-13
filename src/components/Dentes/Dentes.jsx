@@ -10,19 +10,16 @@ function Editar({ ...props }) {
     cliente,
     cliente: { tratamentos },
   } = useSelector((state) => state.users);
-  // const { denteSelecionado } = useSelector((state) => state.dentes);
+  const { denteSelecionado } = useSelector((state) => state.dentes);
   const dispatch = useDispatch();
-  const [newD, setNew] = useState(dentes);
+
   useEffect(() => {
     dispatch.dentes.loadDentes();
-  }, [dispatch.dentes, props.cliente, cliente]);
+  }, [dispatch.dentes, props.cliente]);
 
   useEffect(() => {
-    console.log('cliente');
-
     dispatch.users.getUserInfo({ id: props.cliente });
-    return dispatch.dentes.removeDentes();
-  }, [dispatch.dentes, dispatch.users, props.cliente]);
+  }, [dispatch.users, props.cliente]);
 
   useEffect(() => {
     const novos = dentes;
@@ -40,11 +37,18 @@ function Editar({ ...props }) {
       });
     });
     dispatch.dentes.inserirNovosDentes(novos);
-  }, [tratamentos, cliente, dispatch.dentes]);
+  }, [tratamentos, props.cliente, dentes, dispatch.dentes]);
 
   const clicked = async (area) => {
-    const selected = { id: area.id, tipo: 1 };
-    dispatch.dentes.selecionarDente(selected);
+    const categoria = props.servico.categoria_id;
+    const selected = { id: area.id, tipo: categoria === 2 ? 0 : 1 };
+    const index = _.findIndex(denteSelecionado, { id: area.id });
+    if (index > -1) {
+      console.log(area.id);
+      dispatch.dentes.removeSelected({ id: area.id });
+    } else {
+      dispatch.dentes.selecionarDente(selected);
+    }
     //setSelected(null);
   };
 

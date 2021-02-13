@@ -1,6 +1,7 @@
 /* eslint-disable import/no-anonymous-default-export */
 import { get } from '../Api/api';
 import { apiUrls } from '../Api/apiUrls';
+import _ from 'lodash';
 
 export default {
   state: {
@@ -14,8 +15,10 @@ export default {
       return { ...state, dentes: payload };
     },
     setResetDentes(state, payload) {
-      console.log(state);
       return { dentes: [] };
+    },
+    setRemoveFrom(state, payload) {
+      return { ...state, denteSelecionado: payload };
     },
     setSelecionado(state, payload) {
       return {
@@ -41,8 +44,13 @@ export default {
     },
     async selecionarDente(payload, state) {
       try {
-        //this.setLoading(true);
+        const { tipo, id } = payload;
         this.setSelecionado(payload);
+        const { dentes } = JSON.parse(JSON.stringify(state.dentes));
+        const index = _.findIndex(dentes, { id: id });
+        dentes[index].preFillColor =
+          tipo === 1 ? 'green' : 'rgba(0, 0, 0, 0.5)';
+        this.inserirNovosDentes(dentes);
       } catch (error) {
         //TODO: HANDLE ERROR
       }
@@ -50,7 +58,6 @@ export default {
     async removeDentes(payload, state) {
       try {
         //this.setLoading(true);
-        console.log('remover');
         this.setResetDentes();
       } catch (error) {
         //TODO: HANDLE ERROR
@@ -60,8 +67,23 @@ export default {
     async inserirNovosDentes(payload, state) {
       try {
         //this.setLoading(true);
-        console.log('inserir');
         this.setdentes(payload);
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
+    async removeSelected(payload, state) {
+      try {
+        const { id } = payload;
+        const { denteSelecionado } = state.dentes;
+        const { dentes } = state.dentes;
+        const index = _.findIndex(denteSelecionado, { id });
+        denteSelecionado.splice(index, 1);
+        const index2 = _.findIndex(dentes, { id: id });
+
+        await this.setRemoveFrom(denteSelecionado);
+        delete dentes[index2].preFillColor;
+        await this.inserirNovosDentes(dentes);
       } catch (error) {
         //TODO: HANDLE ERROR
       }

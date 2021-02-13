@@ -31,56 +31,56 @@ function NovaConsulta({
     getCategorias();
   }, [dispatch.users, getCategorias, getProdutos, getServicos]);
 
-  // const maisMaterial = () => {
-  //   const newMaterial = numEq;
-  //   newMaterial.push(1);
-  //   addEquipamento([...newMaterial]);
-  // };
+  const maisMaterial = () => {
+    const newMaterial = numEq;
+    newMaterial.push(1);
+    addEquipamento([...newMaterial]);
+  };
 
-  // const handleChange = (e) => {
-  //   setValue2({ ...value2, [e.target.name]: e.target.value });
-  // };
+  const handleChange = (e) => {
+    setValue2({ ...value2, [e.target.name]: e.target.value });
+  };
 
-  // const imageChange = (e) => {
-  //   setImage({ image: e.target.files[0] });
-  // };
+  const imageChange = (e) => {
+    setImage({ image: e.target.files[0] });
+  };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const obj = {};
-  //   _.map(Object.values(value2), (numero, idx, i, a) => {
-  //     obj[value1[idx]] = numero;
-  //   });
-  //   for (const n in obj) {
-  //     const p = _.find(produtos.produtos, { id: parseInt(n, 10) });
-  //     const payload = {
-  //       id: parseInt(n, 10),
-  //       quantidade: p?.quantidade - parseInt(obj[n], 10),
-  //     };
-  //     editarProdutos(payload);
-  //   }
-  //   const formData = new FormData();
-  //   formData.append('cliente_id', cliente.id);
-  //   formData.append('servico_id', 1);
-  //   if (image?.image) {
-  //     formData.append('image', image.image);
-  //   }
-  //   dispatch.consultas.inserirConsulta(formData);
-  // };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const obj = {};
+    _.map(Object.values(value2), (numero, idx, i, a) => {
+      obj[value1[idx]] = numero;
+    });
+    for (const n in obj) {
+      const p = _.find(produtos.produtos, { id: parseInt(n, 10) });
+      const payload = {
+        id: parseInt(n, 10),
+        quantidade: p?.quantidade - parseInt(obj[n], 10),
+      };
+      editarProdutos(payload);
+    }
+    const formData = new FormData();
+    formData.append('cliente_id', cliente.id);
+    formData.append('servico_id', 1);
+    if (image?.image) {
+      formData.append('image', image.image);
+    }
+    dispatch.consultas.inserirConsulta(formData);
+  };
 
-  // let options = [];
+  let options = [];
 
-  // if (servicos.servicos && categorias.categorias) {
-  //   options = _.map(servicos.servicos, (option) => {
-  //     const firstLetter = option.nome[0].toUpperCase();
-  //     const cat = _.find(categorias.categorias, { id: option.categoria_id });
-  //     return {
-  //       firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-  //       categoria: cat?.nome,
-  //       ...option,
-  //     };
-  //   });
-  // }
+  if (servicos.servicos && categorias.categorias) {
+    options = _.map(servicos.servicos, (option) => {
+      const firstLetter = option.nome[0].toUpperCase();
+      const cat = _.find(categorias.categorias, { id: option.categoria_id });
+      return {
+        firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+        categoria: cat?.nome,
+        ...option,
+      };
+    });
+  }
 
   return (
     <div className="page-content-wrapper">
@@ -139,14 +139,14 @@ function NovaConsulta({
                           </div>
                           <div className="col-lg-6 p-t-20 col-md-6">
                             <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                              {/* <TextField
+                              <TextField
                                 id="standard-basic"
                                 type="number"
                                 fullWidth
                                 label="Número utilizado"
                                 name={`material-${index}`}
                                 onChange={handleChange}
-                              /> */}
+                              />
                             </div>
                           </div>
                         </>
@@ -154,7 +154,7 @@ function NovaConsulta({
                     })}
                   <div className="col-lg-12 p-t-20">
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                      {/* <Autocomplete
+                      <Autocomplete
                         id="grouped-demo"
                         options={options.sort(
                           (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
@@ -171,7 +171,7 @@ function NovaConsulta({
                             variant="outlined"
                           />
                         )}
-                      /> */}
+                      />
                     </div>
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
                       <textarea
@@ -186,7 +186,9 @@ function NovaConsulta({
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
-                  {cliente && <Dentes cliente={cliente.id} />}
+                  {cliente && (
+                    <Dentes cliente={cliente.id} servico={tratamento} />
+                  )}
                 </div>
                 <div class="col-lg-12 p-t-20 text-center">
                   <button
