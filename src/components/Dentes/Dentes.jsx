@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
@@ -7,7 +7,6 @@ import dentesimg from '../../img/dentes.jpg';
 
 function Editar({ ...props }) {
   const { dentes } = useSelector((state) => state.dentes);
-  console.log(props);
   const {
     cliente,
     cliente: { tratamentos },
@@ -27,21 +26,26 @@ function Editar({ ...props }) {
 
   useEffect(() => {
     const novos = dentes;
+    const ids = [];
     _.map(tratamentos, (tratamento, index) => {
+      ids.push(tratamento.dente_id);
       const preFillColor =
         tratamento.estado === 'bom'
-          ? 'green'
+          ? 'rgba(0, 230, 64, 0.5)'
           : tratamento.estado === 'inexistente'
-          ? 'black'
-          : 'red';
+          ? 'rgba(0, 0, 0, 0.5)'
+          : 'rgba(242, 38, 19, 0.5)';
       _.map(novos, (dente) => {
+        const index = _.findIndex(denteSelecionado, { id: dente.id });
         if (dente.id === tratamento.dente_id) {
           dente['preFillColor'] = preFillColor;
+        } else if (ids.includes(dente.id) === false && index < 0) {
+          delete dente['preFillColor'];
         }
       });
     });
     dispatch.dentes.inserirNovosDentes(novos);
-  }, [tratamentos, props.cliente, dentes, dispatch.dentes]);
+  }, [props.cliente, tratamentos,dentes, dispatch.dentes]);
 
   const clicked = async (area) => {
     const categoria = props.servico.categoria_id;
@@ -50,11 +54,18 @@ function Editar({ ...props }) {
       tipo: categoria === 2 ? 0 : 1,
       servico: props.servico,
     };
-    const index = _.findIndex(denteSelecionado, { id: area.id });
+    const index = _.findIndex(denteSelecionado, {
+      id: area.id,
+    });
     if (index > -1) {
       dispatch.dentes.removeSelected({ id: area.id });
     } else {
-      dispatch.dentes.selecionarDente(selected);
+      const treatedTooth = _.findIndex(tratamentos, { dente_id: area.id });
+      if (treatedTooth > -1) {
+        tratamentos[treatedTooth].estado = categoria === 2 ? 'inexistente' : 'bom';
+        //await dispatch.dentes.changePrefillColor(selected);
+      }
+      await dispatch.dentes.selecionarDente(selected);
     }
   };
 
@@ -71,7 +82,14 @@ function Editar({ ...props }) {
         estado,
         id: selecionado.id,
       };
-      await dispatch.tratamentos.inserirTratamentos(payload);
+      const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
+      if(jaExiste > -1){
+        const payload2 = { id: tratamentos[jaExiste].id, estado}
+        await dispatch.tratamentos.editarTratamento(payload2);
+      }
+      else{
+        await dispatch.tratamentos.inserirTratamentos(payload);
+      }
       const formData = new FormData();
       formData.append('cliente_id', idCliente);
       formData.append('servico_id', selecionado.servico.id);

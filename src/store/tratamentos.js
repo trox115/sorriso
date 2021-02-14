@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { get, post } from '../Api/api';
+import { get, post, patch } from '../Api/api';
 import { apiUrls, replaceUrls } from '../Api/apiUrls';
 
 export default {
@@ -32,10 +32,11 @@ export default {
         //TODO: HANDLE ERROR
       }
     },
-    async editarConsultas(payload, state) {
+    async editarTratamento(payload, state) {
       try {
         //this.setLoading(true);
-        // const { id, nome, quantidade, custo } = payload;
+        const { id, estado } = payload;
+        const response = await patch(replaceUrls(apiUrls.editarTratamento, { id }), { estado });
         // if (response && response.status === 200) {
         // }
       } catch (error) {
@@ -48,9 +49,7 @@ export default {
         console.log('hey');
         //this.setLoading(true);
         const { id } = payload;
-        const response = await get(
-          replaceUrls(apiUrls.getTratamentoByUserId, { id })
-        );
+        const response = await get(replaceUrls(apiUrls.getTratamentoByUserId, { id }));
         if (response && response.status === 200) {
           this.setTratamentosCliente(response.data);
         }

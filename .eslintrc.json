@@ -15,18 +15,6 @@
         "react", "prettier"
     ],
     "rules": {
-        "prettier/prettier": [ 
-            "error",
-            {
-                "printWidth": 80,
-                "tabWidth": 2,
-                "trailingComma": "es5",
-                "semi": true,
-                "jsxBracketSameLine": false,
-                "arrowParens": "always",
-                "jsxSingleQuote": false,
-                "singleQuote": true
-            }
-        ]
+        
     }
 }

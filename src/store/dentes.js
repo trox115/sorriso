@@ -12,13 +12,19 @@ export default {
   reducers: {
     loaded: (state, payload) => payload,
     setdentes(state, payload) {
-      return { ...state, dentes: payload };
+      return {
+        ...state,
+        dentes: payload,
+      };
     },
     setResetDentes(state, payload) {
       return { dentes: [] };
     },
     setRemoveFrom(state, payload) {
-      return { ...state, denteSelecionado: payload };
+      return {
+        ...state,
+        denteSelecionado: payload,
+      };
     },
     setSelecionado(state, payload) {
       return {
@@ -48,8 +54,20 @@ export default {
         this.setSelecionado(payload);
         const { dentes } = JSON.parse(JSON.stringify(state.dentes));
         const index = _.findIndex(dentes, { id: id });
-        dentes[index].preFillColor =
-          tipo === 1 ? 'rgba(0, 230, 64, 0.5)' : 'rgba(0, 0, 0, 0.5)';
+        dentes[index].preFillColor = tipo === 1 ? 'rgba(0, 230, 64, 0.5)' : 'rgba(0, 0, 0, 0.5)';
+        await this.inserirNovosDentes(dentes);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async changePrefillColor(payload, state) {
+      try {
+        const { id, tipo } = payload;
+        let { dentes } = state.dentes;
+        const index = _.findIndex(dentes, { id });
+        // await this.selecionarDente(payload);
+        delete dentes[index].preFillColor;
+        dentes[index].preFillColor = tipo === 1 ? 'black' : 'black';
         await this.inserirNovosDentes(dentes);
       } catch (error) {
         console.log(error);
@@ -66,7 +84,6 @@ export default {
 
     async inserirNovosDentes(payload, state) {
       try {
-        //this.setLoading(true);
         this.setdentes(payload);
       } catch (error) {
         //TODO: HANDLE ERROR

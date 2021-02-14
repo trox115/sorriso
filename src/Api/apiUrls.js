@@ -25,6 +25,7 @@ export const apiUrls = {
   inserirTratamento: '/inserirTratamento',
   tratamentos: '/tratamentos',
   getTratamentoByUserId: '/tratamentos/cliente/:id',
+  editarTratamento: '/tratamentos/:id',
 
   //Documentos
   docCategoria: '/docCategoria',
