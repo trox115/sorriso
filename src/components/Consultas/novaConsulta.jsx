@@ -4,18 +4,17 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import SubHeader from '../SubHeader/SubHeader';
 import _ from 'lodash';
 import { connect, useDispatch, useSelector } from 'react-redux';
+
 import Dentes from '../Dentes/Dentes';
+import './novaConsulta.css';
 
 function NovaConsulta({
   produtos,
-  getClientes,
   getProdutos,
   servicos,
   getServicos,
   categorias,
   getCategorias,
-  editarProdutos,
-  inserirConsulta,
 }) {
   const [numEq, addEquipamento] = useState([]);
   const [value2, setValue2] = useState({});
@@ -30,58 +29,35 @@ function NovaConsulta({
     getProdutos();
     getServicos();
     getCategorias();
-  }, [getCategorias, getClientes, getProdutos, getServicos]);
+  }, [dispatch.users, getCategorias, getProdutos, getServicos]);
 
-  // const maisMaterial = () => {
-  //   const newMaterial = numEq;
-  //   newMaterial.push(1);
-  //   addEquipamento([...newMaterial]);
-  // };
+  const maisMaterial = () => {
+    const newMaterial = numEq;
+    newMaterial.push(1);
+    addEquipamento([...newMaterial]);
+  };
 
-  // const handleChange = (e) => {
-  //   setValue2({ ...value2, [e.target.name]: e.target.value });
-  // };
+  const handleChange = (e) => {
+    setValue2({ ...value2, [e.target.name]: e.target.value });
+  };
 
-  // const imageChange = (e) => {
-  //   setImage({ image: e.target.files[0] });
-  // };
+  const imageChange = (e) => {
+    setImage({ image: e.target.files[0] });
+  };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const obj = {};
-  //   _.map(Object.values(value2), (numero, idx, i, a) => {
-  //     obj[value1[idx]] = numero;
-  //   });
-  //   for (const n in obj) {
-  //     const p = _.find(produtos.produtos, { id: parseInt(n, 10) });
-  //     const payload = {
-  //       id: parseInt(n, 10),
-  //       quantidade: p?.quantidade - parseInt(obj[n], 10),
-  //     };
-  //     editarProdutos(payload);
-  //   }
-  //   const formData = new FormData();
-  //   formData.append('cliente_id', cliente.id);
-  //   formData.append('servico_id', 1);
-  //   if (image?.image) {
-  //     formData.append('image', image.image);
-  //   }
-  //   dispatch.consultas.inserirConsulta(formData);
-  // };
+  let options = [];
 
-  // let options = [];
-
-  // if (servicos.servicos && categorias.categorias) {
-  //   options = _.map(servicos.servicos, (option) => {
-  //     const firstLetter = option.nome[0].toUpperCase();
-  //     const cat = _.find(categorias.categorias, { id: option.categoria_id });
-  //     return {
-  //       firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
-  //       categoria: cat?.nome,
-  //       ...option,
-  //     };
-  //   });
-  // }
+  if (servicos.servicos && categorias.categorias) {
+    options = _.map(servicos.servicos, (option) => {
+      const firstLetter = option.nome[0].toUpperCase();
+      const cat = _.find(categorias.categorias, { id: option.categoria_id });
+      return {
+        firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+        categoria: cat?.nome,
+        ...option,
+      };
+    });
+  }
 
   return (
     <div className="page-content-wrapper">
@@ -95,30 +71,32 @@ function NovaConsulta({
               </div>
               <div className="card-body" style={{ display: 'flex' }}>
                 <div className="col-lg-6 p-t-20">
-                  {users && (
-                    <Autocomplete
-                      id="combo-box-demo"
-                      options={users}
-                      onChange={(event, value) => setCliente(value)}
-                      onClick={() => setCliente()}
-                      getOptionLabel={(option) => option.nome}
-                      style={{ minWidth: 300 }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          label="Cliente"
-                          variant="outlined"
-                        />
-                      )}
-                    />
-                  )}
+                  <div className="col-lg-12 p-t-20">
+                    {users && (
+                      <Autocomplete
+                        id="combo-box-demo"
+                        options={users}
+                        onChange={(event, value) => setCliente(value)}
+                        onClick={() => setCliente()}
+                        getOptionLabel={(option) => option.nome}
+                        style={{ minWidth: 300 }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Cliente"
+                            variant="outlined"
+                          />
+                        )}
+                      />
+                    )}
+                  </div>
 
                   {produtos &&
                     _.map(numEq, (num, index) => {
                       return (
                         <>
-                          <div className="col-lg-6 p-t-20" key={index}>
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                          <div className="col-lg-12 p-t-20" key={index}>
+                            <div className="text-container">
                               <Autocomplete
                                 id={index}
                                 options={produtos.produtos}
@@ -126,8 +104,7 @@ function NovaConsulta({
                                 onChange={(event, value) =>
                                   setValue1([...value1, value.id])
                                 }
-                                onFocus
-                                style={{ minWidth: 300 }}
+                                style={{ width: '50%' }}
                                 renderInput={(params) => (
                                   <TextField
                                     {...params}
@@ -136,18 +113,16 @@ function NovaConsulta({
                                   />
                                 )}
                               />
-                            </div>
-                          </div>
-                          <div className="col-lg-6 p-t-20 col-md-6">
-                            <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                              {/* <TextField
+
+                              <TextField
                                 id="standard-basic"
                                 type="number"
                                 fullWidth
+                                style={{ width: '25%' }}
                                 label="Número utilizado"
                                 name={`material-${index}`}
                                 onChange={handleChange}
-                              /> */}
+                              />
                             </div>
                           </div>
                         </>
@@ -155,7 +130,7 @@ function NovaConsulta({
                     })}
                   <div className="col-lg-12 p-t-20">
                     <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
-                      {/* <Autocomplete
+                      <Autocomplete
                         id="grouped-demo"
                         options={options.sort(
                           (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
@@ -172,7 +147,7 @@ function NovaConsulta({
                             variant="outlined"
                           />
                         )}
-                      /> */}
+                      />
                     </div>
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
                       <textarea
@@ -184,39 +159,36 @@ function NovaConsulta({
                         Observações
                       </label>
                     </div>
+                    <div class="col-lg-12 p-t-20 text-center">
+                      <button
+                        type="button"
+                        className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
+                        onClick={maisMaterial}
+                      >
+                        Mais Material
+                      </button>
+                      <label htmlFor="raised-button-file">
+                        <input
+                          accept="image/*"
+                          id="contained-button-file"
+                          multiple
+                          type="file"
+                          onChange={imageChange}
+                        />
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
-                  {true && <Dentes cliente={cliente} />}
-                </div>
-                <div class="col-lg-12 p-t-20 text-center">
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-                  >
-                    Gravar
-                  </button>
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
-                  >
-                    Mais Material
-                  </button>
-                  <input
-                    accept="image/*"
-                    style={{ display: 'none' }}
-                    id="raised-button-file"
-                    multiple
-                    type="file"
-                  />
-                  <label htmlFor="raised-button-file">
-                    <input
-                      accept="image/*"
-                      id="contained-button-file"
-                      multiple
-                      type="file"
+                  {cliente && (
+                    <Dentes
+                      cliente={cliente.id}
+                      servico={tratamento}
+                      image={image}
+                      value1={value1}
+                      value2={value2}
                     />
-                  </label>
+                  )}
                 </div>
               </div>
             </div>
