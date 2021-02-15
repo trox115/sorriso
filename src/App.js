@@ -1,6 +1,4 @@
-import Footer from './components/NavigationMenu/Footer';
-import TopNav from './components/NavigationMenu/TopNav';
-import NavigationMenu from './components/NavigationMenu/NavigationMenu';
+
 import NovaMarcacao from './components/Marcacoes/NovaMarcacao';
 import NovoCliente from './components/Clientes/NovoCliente';
 import VerClientes from './components/Clientes/VerClientes';
@@ -21,57 +19,42 @@ import Avaliacao from './components/Consultas/AvaliacaoInicial';
 import InserirVideo from './components/Educacao/Educacao';
 import Videos from './components/Educacao/Videos';
 import Video from './components/Educacao/VerVideo';
-
+import Login from './components/User/Login';
 import store from './store';
-
+import ProtectedRoute from './components/Routes/ProtectedRoute';
 import { Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
+import React, { useState } from 'react';
 import './App.css';
 
 function App() {
   return (
     <Provider store={store}>
-      <div className="page-wrapper">
-        <TopNav />
-
-        <div className="page-container">
-          <NavigationMenu />
-          <div className="page-content-wrapper">
+     
             <Switch>
-              <Route exact path="/" component={DashBoard} />
-              <Route exact path="/verClientes" component={VerClientes} />
-              <Route exact path="/novaMarcacao" component={NovaMarcacao} />
-              <Route exact path="/agenda" component={Agenda2} />
-              <Route exact path="/NovoCliente" component={NovoCliente} />
-              <Route exact path="/cliente/:id" component={Informacoes} />
-              <Route exact path="/inserirVideo" component={InserirVideo} />
-              <Route
-                exact
-                path="/inserirMaterial"
-                component={InserirMaterial}
-              />
-              <Route exact path="/listaDeStock" component={ListaDeStock} />
-              <Route exact path="/produto/:id" component={EditarMaterial} />
-              <Route exact path="/verServicos" component={verServicos} />
-              <Route exact path="/inserirServico" component={inserirServico} />
-              <Route
-                exact
-                path="/inserirCategoria"
-                component={inserirCategoria}
-              />
-              <Route exact path="/novaConsulta" component={novaConsulta} />
-              <Route exact path="/verConsultas" component={verConsultas} />
-              <Route exact path="/emitirDoc" component={Emitir} />
-              <Route exact path="/detalhes" component={Detalhes} />
-              <Route exact path="/avaliacao" component={Avaliacao} />
-              <Route exact path="/listaDeVideos" component={Videos} />
-              <Route exact path="/video" component={Video} />
+              <Route exact path='/login' component={Login} />
+              <ProtectedRoute exact path='/' component={DashBoard}/>
+              <ProtectedRoute exact path='/verClientes' component={VerClientes} />
+              <ProtectedRoute exact path='/novaMarcacao' component={NovaMarcacao} />
+              <ProtectedRoute exact path='/agenda' component={Agenda2} />
+              <ProtectedRoute exact path='/NovoCliente' component={NovoCliente} />
+              <ProtectedRoute exact path='/cliente/:id' component={Informacoes} />
+              <ProtectedRoute exact path='/inserirVideo' component={InserirVideo} />
+              <ProtectedRoute exact path='/inserirMaterial' component={InserirMaterial} />
+              <ProtectedRoute exact path='/listaDeStock' component={ListaDeStock} />
+              <ProtectedRoute exact path='/produto/:id' component={EditarMaterial} />
+              <ProtectedRoute exact path='/verServicos' component={verServicos} />
+              <ProtectedRoute exact path='/inserirServico' component={inserirServico} />
+              <ProtectedRoute exact path='/inserirCategoria' component={inserirCategoria} />
+              <ProtectedRoute exact path='/novaConsulta' component={novaConsulta} />
+              <ProtectedRoute exact path='/verConsultas' component={verConsultas} />
+              <ProtectedRoute exact path='/emitirDoc' component={Emitir} />
+              <ProtectedRoute exact path='/detalhes' component={Detalhes} />
+              <ProtectedRoute exact path='/avaliacao' component={Avaliacao} />
+              <ProtectedRoute exact path='/listaDeVideos' component={Videos} />
+              <ProtectedRoute exact path='/video' component={Video} />
             </Switch>
-          </div>
-        </div>
-        <Footer />
-      </div>
+         
     </Provider>
   );
 }

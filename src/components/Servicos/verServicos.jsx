@@ -16,7 +16,8 @@ function VerServicos({ getCategorias, getServicos }) {
       dispatch.categorias.loadCategorias();
     }
   }, [servicos, categorias, dispatch.servicos, dispatch.categorias]);
-
+  const a = localStorage.getItem('token')
+  console.log(a)
   return (
     <div className="page-content-wrapper">
       <SubHeader title="Serviços" />

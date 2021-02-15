@@ -42,6 +42,8 @@ async function doRequest(url, payload, method) {
     method,
     headers: {
       'content-type': 'application/json',
+      'X-User-Email': localStorage.getItem('email'),
+      'X-User-Token': localStorage.getItem('token')
     },
     data: payload,
   };

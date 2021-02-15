@@ -46,6 +46,10 @@ export const apiUrls = {
   //Videos
   videos: '/videos',
   inserirVideo: '/inserVideo',
+
+  //Sessions
+  login: '/sessions',
+  logout: '/logout'
 };
 
 export const replaceUrls = (url, obj) => {

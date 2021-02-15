@@ -76,7 +76,7 @@ export default function NavigationMenu() {
               <span>-- Menu</span>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link nav-toggle">
+              <a href="verClientes" className="nav-link nav-toggle">
                 <FaceSharp
                   className="material-icons"
                   style={{ marginRight: '5px', marginBottom: '3px' }}
@@ -98,7 +98,7 @@ export default function NavigationMenu() {
               </ul>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link nav-toggle">
+              <a href="/verStock" className="nav-link nav-toggle">
                 <i className="material-icons">business_center</i>
                 <span className="title">Stock</span>
                 <span className="arrow"></span>
