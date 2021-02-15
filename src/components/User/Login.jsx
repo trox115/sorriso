@@ -2,17 +2,26 @@ import React, { useState } from 'react';
 import { TextField, Button } from '@material-ui/core';
 import logo1 from './logo1.png'
 import LockIcon from '@material-ui/icons/Lock';
-
+import { useDispatch, useSelector } from 'react-redux';
 import './Login.css';
+import { useHistory } from 'react-router-dom';
 export default function Login() {
-  const [state, setstate] = useState({email:'', passoword:''});
+  const [state, setstate] = useState({email:'', password:''});
 
   const handleChange = (e) => {
     setstate({...state, [e.target.name]: e.target.value});
   }
-  const handleSubmit = (e) => {
+  const {user} = useSelector(state => state.user)
+  const history = useHistory(); 
+  const dispatch = useDispatch();
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(state)
+    await dispatch.user.logIn(state).then(() => {
+      if(user){
+      history.push('/');
+    }
+    })
+    .catch(error => error);
   }  
   return (
     <div className='login'>

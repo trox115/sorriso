@@ -1678,8 +1678,8 @@ form.search-form-opened .btn.submit {
 *******************************************************************************************/
 
 .sidemenu-container,
-.sidemenu-closed.sidemenu-container-fixed .sidemenu-container:hover {} .sidemenu-container .sidemenu>li>a,
-.sidemenu-closed.sidemenu-container-fixed .sidemenu-container:hover .sidemenu>li>a {
+.sidemenu-closed.sidemenu-container-fixed .sidemenu-container:hover {} .sidemenu-container .sidemenu>li>div,
+.sidemenu-closed.sidemenu-container-fixed .sidemenu-container:hover .sidemenu>li>div {
     /* border-bottom: 1px solid #1c262f; */
     color: #b7c0cd;
     font-weight: 400 !important;

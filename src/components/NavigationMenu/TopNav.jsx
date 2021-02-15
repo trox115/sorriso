@@ -2,8 +2,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
 import logo2 from '../../img/logo2.png';
-
+import {useDispatch } from 'react-redux'
 export default function TopNav() {
+  const dispatch = useDispatch();
+
+  const handleLogout = (e) => {
+    dispatch.user.logOut();
+  }
   return (
     <div className="page-header navbar navbar-fixed-top">
       <div className="page-header-inner ">
@@ -254,7 +259,7 @@ export default function TopNav() {
                   </a>
                 </li>
                 <li>
-                  <a href="login.html">
+                  <a onClick={handleLogout}>
                     <i className="icon-logout"></i> Log Out{' '}
                   </a>
                 </li>

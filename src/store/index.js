@@ -10,6 +10,7 @@ import dentes from './dentes';
 import marcacoes from './marcacoes';
 import pagamentos from './pagamentos';
 import videos from './Videos';
+import user from './user';
 
 const models = {
   users,
@@ -23,6 +24,7 @@ const models = {
   marcacoes,
   pagamentos,
   videos,
+  user,
 };
 
 const store = init({
