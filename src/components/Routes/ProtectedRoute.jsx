@@ -1,12 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import Footer from '../NavigationMenu/Footer';
 import TopNav from '../NavigationMenu/TopNav';
 import NavigationMenu from '../NavigationMenu/NavigationMenu';
 
 function ProtectedRoute({ component: Component, ...rest }) {
-  const { user } = useSelector(state => state.user)
   const auth = localStorage.getItem('token')
   console.log(auth)
   return (
