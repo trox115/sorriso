@@ -24,7 +24,7 @@ import store from './store';
 import ProtectedRoute from './components/Routes/ProtectedRoute';
 import { Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
 
 function App() {
