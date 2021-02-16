@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
@@ -8,11 +8,8 @@ import dentesimg from '../../img/dentes.jpg';
 
 function Editar({ ...props }) {
   const { dentes } = useSelector((state) => state.dentes);
-  const {
-    cliente,
-  } = useSelector((state) => state.users);
+  const { cliente } = useSelector((state) => state.users);
   const { denteSelecionado } = useSelector((state) => state.dentes);
-  const { produtos } = useSelector((state) => state.produtos);
   const dispatch = useDispatch();
   const history = useHistory();
   useEffect(() => {
@@ -46,7 +43,13 @@ function Editar({ ...props }) {
   };
 
   const handleSubmit = async () => {
-    const orcamento = await Promise.resolve(dispatch.documentos.inserirOrcamento({ cliente:cliente.cliente.id, doc_categoria:1, servico: 1 }))
+    const orcamento = await Promise.resolve(
+      dispatch.documentos.inserirOrcamento({
+        cliente: cliente.cliente.id,
+        doc_categoria: 1,
+        servico: 1,
+      })
+    );
     for (const selecionado of denteSelecionado) {
       const estado = 'Não';
       console.log(selecionado);
@@ -55,12 +58,12 @@ function Editar({ ...props }) {
         estado,
         id: selecionado.id,
       };
-      console.log(selecionado.servico)
+      console.log(selecionado.servico);
       const payload2 = {
         servico_id: selecionado.servico.id,
         orcamento_id: orcamento.id,
         dente_id: selecionado.id,
-      }
+      };
       await dispatch.tratamentos.inserirTratamentos(payload);
       await dispatch.documentos.inserirOrcamentoDetails(payload2);
     }
@@ -79,10 +82,10 @@ function Editar({ ...props }) {
         />
       )}
       ;
-      <div class="col-lg-12 p-t-20 text-center">
+      <div class='col-lg-12 p-t-20 text-center'>
         <button
-          type="button"
-          className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
+          type='button'
+          className='mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink'
           onClick={handleSubmit}
         >
           Gravar

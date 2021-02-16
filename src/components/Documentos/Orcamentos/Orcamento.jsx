@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useHistory } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 import logo2 from '../../../img/logo2.png';
@@ -16,7 +16,7 @@ export default function Orcamento() {
     dispatch.documentos.getOrcamentoId({ id: parseInt(id, 10) });
   }, [dispatch, id]);
   const ref = React.createRef();
-  
+
   return (
     <div className='page-content-wrapper'>
       <SubHeader title='Consultas' />
@@ -27,11 +27,9 @@ export default function Orcamento() {
               <div className='card-head'>
                 <header>Orçamento</header>
               </div>
-              <ReactToPdf targetRef={ref} filename="div-blue.pdf">
-        {({toPdf}) => (
-            <button onClick={toPdf}>Imprimir</button>
-        )}
-    </ReactToPdf>
+              <ReactToPdf targetRef={ref} filename='div-blue.pdf'>
+                {({ toPdf }) => <button onClick={toPdf}>Imprimir</button>}
+              </ReactToPdf>
               <div className='card-body '>
                 <div className='row'>
                   <div className='col-md-12' ref={ref}>

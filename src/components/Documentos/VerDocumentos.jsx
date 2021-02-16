@@ -13,7 +13,7 @@ export default function VerDocumentos() {
   useEffect(() => {
     dispatch.documentos.loadOrcamentos();
   }, [dispatch.documentos]);
-  console.log(orcamentos)
+
   return (
     <div className='page-content-wrapper'>
       <SubHeader title='Consultas' />
@@ -46,11 +46,16 @@ export default function VerDocumentos() {
                               <img src='assets/img/user/user1.jpg' alt='' />
                             </td>
                             <td className='center'>
-                              <Link to={{pathname: `/orcamento/${orcamento.id}`, query: {orçamento:orcamento}}} >
-    Orçamento </Link>
+                              <Link
+                                to={{
+                                  pathname: `/orcamento/${orcamento.id}`,
+                                  query: { orçamento: orcamento },
+                                }}
+                              >
+                                Orçamento{' '}
+                              </Link>
                             </td>
                             <td className='center'>
-                            
                               <Link to={`orcamento/${orcamento.id}`}>
                                 {orcamento.cliente.nome}{' '}
                               </Link>

@@ -4,26 +4,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField } from '@material-ui/core';
 import _ from 'lodash';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import moment from 'moment';
 import SubHeader from '../SubHeader/SubHeader';
 
 import Dentes from './Dentes';
 
 function Emitir() {
   const [cliente, setCliente] = useState();
-  const [estado, setEstado] = useState();
   const [tratamento, setTratamento] = useState();
   const dispatch = useDispatch();
-  const { dentes } = useSelector((state) => state.dentes);
   const { users } = useSelector((state) => state.users);
   const {categorias } = useSelector((state) => state.categorias);
   const {servicos } = useSelector((state) => state.servicos);
-  const { documentos } = useSelector((state) => state.documentos);
 
   useEffect(() => {
     dispatch.users.loadClientes();
@@ -32,28 +23,6 @@ function Emitir() {
     dispatch.servicos.loadServicos();
     dispatch.categorias.loadCategorias();
   }, [dispatch.categorias, dispatch.dentes, dispatch.documentos, dispatch.servicos, dispatch.users]);
-  const [selectedDate, setSelectedDate] = useState(
-    moment()
-  );
-
-  const [categoria, setCategoria] = useState();
-  const [servico, setServico] = useState();
-
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (categoria === 4) {
-      //inserirOrcamento({ cliente, categoria, servico, validade: selectedDate });
-    }
-  };
-
-
- 
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-  };
 
 
   let options = [];
