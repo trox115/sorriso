@@ -136,7 +136,7 @@ export default function NavigationMenu() {
                   </Link>
                 </li>
                 <li className="nav-item">
-                  <a href="/novaCasa" className="nav-link ">
+                  <a href="/verDocumentos" className="nav-link ">
                     <span className="title">Ver Documentos</span>
                   </a>
                 </li>

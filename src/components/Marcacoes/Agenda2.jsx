@@ -76,6 +76,8 @@ function Agenda2({
     title: 'Nova Marcação',
     start: null,
     end: null,
+    tipo: 'dentista',
+    color: '#257e4a',
     cliente: {},
   });
   useEffect(() => {
@@ -97,6 +99,7 @@ function Agenda2({
           start: marcacao.start,
           end: marcacao.end,
           clienteId: users.users[user].id,
+          color: handleEventColor(marcacao.tipo)
         });
       }
       setEvents(novosEventos);
@@ -110,8 +113,6 @@ function Agenda2({
     if (novoUser.nome !== null) {
       await inserirCliente(novoUser);
       await getClientes();
-      console.log(users.users);
-      console.log(novoUser);
       setNewEvent({
         ...newEvent,
         cliente: {
@@ -119,23 +120,48 @@ function Agenda2({
           nome: novoUser.nome,
         },
       });
-      console.log(newEvent);
+      console.log(newEvent)
     }
-
+    const color = handleEventColor(newEvent.tipo)
     const marcacao = {
       title: newEvent.cliente?.nome ? newEvent.cliente.nome : novoUser.nome,
       start: moment(newEvent.start).format('YYYY-MM-DD HH:mm'),
       end: moment(newEvent.end).format('YYYY-MM-DD HH:mm'),
+      tipo: newEvent.tipo,
       cliente: newEvent.cliente,
+      color
     };
     setEvents([...events, marcacao]);
     await inserirMarcacao({
       cliente_id: newEvent.cliente?.id || uId,
       start: moment(newEvent.start),
+      tipo: newEvent.tipo,
       end: moment(newEvent.end),
     });
     setOpen(false);
   };
+
+  function handleEventColor(tipo) {
+    switch (tipo) {
+      case 'dentista':
+        console.log(tipo)
+        return 'rgba(34, 167, 240, 1)'
+
+      case 'medicina':
+        return 'rgba(240, 52, 52, 1)'
+      case 'nuticionista':
+        return 'rgba(245, 230, 83, 1)'
+
+      case 'nutrição':
+        return 'rgba(118, 93, 105, 1)'
+
+      case 'psicologia':
+        return 'rgba(52, 73, 94, 1)'
+
+      default:
+        return 'rgba(34, 167, 240, 1)'
+    }
+  }
 
   const handleDateClick = (arg) => {
     const begining = moment(arg.dateStr).format('YYYY-MM-DD HH:mm:ss');
@@ -189,7 +215,6 @@ function Agenda2({
           onChange={(event, value) =>
             setNewEvent({ ...newEvent, cliente: value })
           }
-          onFocus
           defaultValue={newEvent.cliente}
           style={{ minWidth: 300 }}
           renderInput={(params) => (
@@ -197,6 +222,18 @@ function Agenda2({
           )}
         />
       )}
+
+      <Autocomplete
+          options={['dentista', 'psicologia', 'medicina', 'nutrição']}
+          getOptionLabel={(option) => option}
+          onChange={(event, value) =>
+            setNewEvent({ ...newEvent, tipo: value })
+          }
+          style={{ minWidth: 300 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Tipo" variant="outlined" />
+          )}
+        />
 
       {novoCliente && (
         <TextField
@@ -269,6 +306,7 @@ function Agenda2({
                   eventClick={clickEvent}
                   editable="true"
                   eventResize={dragEvent}
+                  eventColor= {handleEventColor(newEvent.tipo)}
                   events={events}
                   dateClick={handleDateClick}
                 />

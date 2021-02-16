@@ -60,6 +60,20 @@ export default {
         console.log(error);
       }
     },
+
+    async selecionarDente2(payload, state) {
+      try {
+        const { id } = payload;
+        this.setSelecionado(payload);
+        const { dentes } = state.dentes;
+        const dent  = JSON.parse(JSON.stringify(dentes));
+        const index = _.findIndex(dent, { id: id });
+        dent[index].preFillColor = 'rgba(217, 30, 24, 0.5)';
+        await this.inserirNovosDentes(JSON.parse(JSON.stringify(dent)));
+      } catch (error) {
+        console.log(error);
+      }
+    },
     async changePrefillColor(payload, state) {
       try {
         const { id, tipo } = payload;

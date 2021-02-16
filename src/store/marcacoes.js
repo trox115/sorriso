@@ -31,11 +31,11 @@ export default {
     async editarmarcacoes(payload, state) {
       try {
         //this.setLoading(true);
-        const { id, cliente_id, start, end } = payload;
+        const { id, cliente_id, start, end, tipo } = payload;
         console.log(payload);
         const response = await patch(
           replaceUrls(apiUrls.editarMarcacao, { id }),
-          { cliente_id, start, end }
+          { cliente_id, start, end, tipo }
         );
         if (response && response.status === 200) {
           console.log('done');
