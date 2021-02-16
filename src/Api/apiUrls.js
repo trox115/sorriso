@@ -31,7 +31,8 @@ export const apiUrls = {
   docCategoria: '/docCategoria',
   inserirOrcamento: '/inserirOrcamento',
   orcamentos: '/orcamentos',
-
+  inserirOrcamentoDetails: '/detalhesOrcamento',
+  orcamento: '/orcamento/:id',
   //Dentes
   dentes: '/dentes',
 

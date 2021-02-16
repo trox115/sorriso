@@ -7,6 +7,7 @@ export default {
     documentos: [],
     categoria: [],
     orcamentos: [],
+    orcamento: {},
   },
 
   reducers: {
@@ -19,6 +20,9 @@ export default {
     },
     setOrcamentos(state, payload) {
       return { ...state, orcamentos: payload };
+    },
+    setOrcamento(state, payload) {
+      return { ...state, orcamento: payload };
     },
   },
 
@@ -42,8 +46,22 @@ export default {
         //this.setLoading(true);
         const response = await get(apiUrls.orcamentos);
         if (response && response.status === 200) {
-          //          await this.setDocumentos(response)
           this.setOrcamentos(response.data);
+          //          this.setLoading(false);
+        }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
+
+    async getOrcamentoId(payload, state) {
+      try {
+        //this.setLoading(true);
+        const { id } = payload;
+        const response = await get(replaceUrls(apiUrls.orcamento, { id }))
+        if (response && response.status === 200) {
+          console.log(response);
+          this.setOrcamento(response.data);
           //          this.setLoading(false);
         }
       } catch (error) {
@@ -98,20 +116,40 @@ export default {
       }
     },
 
+    
+    async inserirOrcamentoDetails(payload, state) {
+      console.log(payload);
+      try {
+        //this.setLoading(true);
+        const { dente_id, orcamento_id, servico_id } = payload;
+        console.log(payload)
+        const response = await post(replaceUrls(apiUrls.inserirOrcamentoDetails), {
+          dente_id,
+          orcamento_id,
+          servico_id,
+        });
+        if (response && response.status === 200) {
+          console.log(response)
+          return response.data;
+        }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
     async inserirOrcamento(payload, state) {
       console.log(payload);
       try {
         //this.setLoading(true);
-        const { cliente, categoria, servico, validade } = payload;
-        console.log(payload);
+        const { cliente, categoria, servico } = payload;
+        console.log(payload)
         const response = await post(replaceUrls(apiUrls.inserirOrcamento), {
           cliente_id: cliente,
           doc_categoria_id: categoria,
           servico_id: servico,
-          validade,
         });
         if (response && response.status === 200) {
-          console.log('done');
+          console.log(response)
+          return response.data;
         }
       } catch (error) {
         //TODO: HANDLE ERROR

@@ -20,6 +20,8 @@ import InserirVideo from './components/Educacao/Educacao';
 import Videos from './components/Educacao/Videos';
 import Video from './components/Educacao/VerVideo';
 import Login from './components/User/Login';
+import VerDocumentos from './components/Documentos/VerDocumentos';
+import Orcamento from './components/Documentos/Orcamentos/Orcamento';
 import store from './store';
 import ProtectedRoute from './components/Routes/ProtectedRoute';
 import { Route, Switch } from 'react-router-dom';
@@ -30,7 +32,6 @@ import './App.css';
 function App() {
   return (
     <Provider store={store}>
-     
             <Switch>
               <Route exact path='/login' component={Login} />
               <ProtectedRoute exact path='/' component={DashBoard}/>
@@ -43,6 +44,7 @@ function App() {
               <ProtectedRoute exact path='/inserirMaterial' component={InserirMaterial} />
               <ProtectedRoute exact path='/listaDeStock' component={ListaDeStock} />
               <ProtectedRoute exact path='/produto/:id' component={EditarMaterial} />
+              <ProtectedRoute exact path='/orcamento/:id' component={Orcamento} />
               <ProtectedRoute exact path='/verServicos' component={verServicos} />
               <ProtectedRoute exact path='/inserirServico' component={inserirServico} />
               <ProtectedRoute exact path='/inserirCategoria' component={inserirCategoria} />
@@ -53,8 +55,8 @@ function App() {
               <ProtectedRoute exact path='/avaliacao' component={Avaliacao} />
               <ProtectedRoute exact path='/listaDeVideos' component={Videos} />
               <ProtectedRoute exact path='/video' component={Video} />
+              <ProtectedRoute exact path='/verDocumentos' component={VerDocumentos} />
             </Switch>
-         
     </Provider>
   );
 }

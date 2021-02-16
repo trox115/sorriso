@@ -1,125 +1,95 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
+import { useHistory } from 'react-router-dom';
 import dentesimg from '../../img/dentes.jpg';
 
-function Editar({
-  tratamentos,
-  getTratamentos,
-  inserirTratamentos,
-  getDentes,
-  dentes,
-  ...props
-}) {
-  const [selected, setSelected] = useState(null);
-  const [dent, setMap] = useState({
-    areas: [],
-  });
+function Editar({ ...props }) {
+  const { dentes } = useSelector((state) => state.dentes);
+  const {
+    cliente,
+  } = useSelector((state) => state.users);
+  const { denteSelecionado } = useSelector((state) => state.dentes);
+  const { produtos } = useSelector((state) => state.produtos);
+  const dispatch = useDispatch();
+  const history = useHistory();
   useEffect(() => {
-    getDentes();
-    setMap({ areas: dentes.dentes });
-    return () => {
-      setTrat([]);
+    dispatch.dentes.loadDentes();
+  }, [dispatch.dentes, props.cliente]);
+
+  useEffect(() => {
+    dispatch.users.getUserInfo({ id: props.cliente });
+  }, [dispatch.users, props.cliente]);
+
+  useEffect(() => {
+    const novos = dentes;
+    dispatch.dentes.inserirNovosDentes(novos);
+  }, [dentes]);
+
+  const clicked = async (area) => {
+    const categoria = 1;
+    const selected = {
+      id: area.id,
+      tipo: categoria === 2 ? 0 : 1,
+      servico: props.servico,
     };
-  }, [dentes.dentes, getDentes]);
-  const [tratCli, setTrat] = useState([]);
-  // useEffect(() => {
-  //   const index = _.findIndex(dent.areas, { id: selected });
-  //   if(index !== -1){
-  //     console.log(props.tratamento?.categoria)
-  //     dent.areas[index].preFillColor = props.tratamento.categoria === 'Extração' ?  'rgba(255, 0, 0, 0.3)' : 'green'
-  //   }
-
-  //   if(_.isEmpty(tratamentos.tratamentos)){
-  //     getTratamentos();
-  //     console.log(tratamentos)
-  //   }
-  //   if(_.isEmpty(tratCli)){
-  //       let filtered = [{estado:'Not found'}]
-  //       filtered=_.filter(tratamentos.tratamentos, {cliente_id: props.cliente})
-  //       console.log(filtered)
-
-  //     setTrat(filtered);
-  //   }
-
-  // }, [dent, selected, setSelected,tratamentos, getTratamentos, setTrat,props.tratamento, props.cliente])
-
-  const clicked = (area) => {
-    const index = area.id === selected;
-    if (!index) {
-      setSelected(area.id);
+    const index = _.findIndex(denteSelecionado, {
+      id: area.id,
+    });
+    if (index > -1) {
+      dispatch.dentes.removeSelected({ id: area.id });
     } else {
-      const index = _.findIndex(dent.areas, { id: selected });
-      dent.areas[index].preFillColor = null;
-      setSelected(null);
+      await dispatch.dentes.selecionarDente2(selected);
     }
   };
 
-  const handleSubmit = () => {
-    console.log(props.cliente, selected, props.tratamento);
-    let estado = 'bom';
-    if (props.tratamento.categoria === 'Extração') {
-      estado = 'Não';
-    }
-    inserirTratamentos({ cliente_id: props.cliente, id: selected, estado });
-  };
-
-  for (let t = 0; t < tratCli.length; t++) {
-    const index = _.findIndex(dent.areas, { id: tratCli[t].dente_id });
-    if (index !== -1) {
-      if (tratCli[t].estado !== 'Não') {
-        dent.areas[index].preFillColor = 'green';
-        console.log('change');
-      } else if (tratCli[t].estado === 'Não') {
-        dent.areas[index].preFillColor = 'red';
+  const handleSubmit = async () => {
+    const orcamento = await Promise.resolve(dispatch.documentos.inserirOrcamento({ cliente:cliente.cliente.id, doc_categoria:1, servico: 1 }))
+    for (const selecionado of denteSelecionado) {
+      const estado = 'Não';
+      console.log(selecionado);
+      const payload = {
+        cliente_id: cliente.cliente.id,
+        estado,
+        id: selecionado.id,
+      };
+      console.log(selecionado.servico)
+      const payload2 = {
+        servico_id: selecionado.servico.id,
+        orcamento_id: orcamento.id,
+        dente_id: selecionado.id,
       }
+      await dispatch.tratamentos.inserirTratamentos(payload);
+      await dispatch.documentos.inserirOrcamentoDetails(payload2);
     }
-  }
+    await dispatch.dentes.removeDentes();
+    history.push('/verClientes');
+  };
 
-  if (props.cliente) {
-    return (
-      <>
+  return (
+    <>
+      {!_.isEmpty(dentes) && (
         <ImageMapper
           src={dentesimg}
-          map={dent}
+          map={{ name: 'my-map', areas: dentes }}
           onClick={(area) => clicked(area)}
           width={500}
         />
-        <div class="col-lg-12 p-t-20 text-center">
-          <button
-            type="button"
-            className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-            onClick={handleSubmit}
-          >
-            Gravar
-          </button>
-          <input
-            accept="image/*"
-            style={{ display: 'none' }}
-            id="raised-button-file"
-            multiple
-            type="file"
-          />
-          <label htmlFor="raised-button-file"></label>
-        </div>
-      </>
-    );
-  } else {
-    return <div></div>;
-  }
+      )}
+      ;
+      <div class="col-lg-12 p-t-20 text-center">
+        <button
+          type="button"
+          className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
+          onClick={handleSubmit}
+        >
+          Gravar
+        </button>
+      </div>
+    </>
+  );
 }
 
-const mapState = (state) => ({
-  produtos: state.produtos,
-  tratamentos: state.tratamentos,
-  dentes: state.dentes,
-});
-
-const mapDispatch = (dispatch) => ({
-  getProdutos: () => dispatch.produtos.loadProdutos(),
-  inserirTratamentos: (obj) => dispatch.tratamentos.inserirTratamentos(obj),
-  getTratamentos: () => dispatch.tratamentos.loadTratamentos(),
-  getDentes: () => dispatch.dentes.loadDentes(),
-});
-export default connect(mapState, mapDispatch)(Editar);
+export default Editar;
