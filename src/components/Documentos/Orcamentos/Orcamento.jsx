@@ -94,8 +94,6 @@ export default function Orcamento() {
                         </div>
                         <div className='col-md-12'>
                           <div className='pull-right m-t-30 text-right'>
-                            <p>Sub - Total : {(orcamento.total / 1.06).toFixed(2)} €</p>
-                            <p>Taxa (6%) :{(orcamento.total * 0.06).toFixed(2)} €</p>
                             <hr />
                             <h3>
                               <b>Total :</b> {orcamento.total}€

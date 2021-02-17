@@ -13,8 +13,8 @@ function Emitir() {
   const [tratamento, setTratamento] = useState();
   const dispatch = useDispatch();
   const { users } = useSelector((state) => state.users);
-  const {categorias } = useSelector((state) => state.categorias);
-  const {servicos } = useSelector((state) => state.servicos);
+  const { categorias } = useSelector((state) => state.categorias);
+  const { servicos } = useSelector((state) => state.servicos);
 
   useEffect(() => {
     dispatch.users.loadClientes();
@@ -22,8 +22,13 @@ function Emitir() {
     dispatch.documentos.loadDocCategorias();
     dispatch.servicos.loadServicos();
     dispatch.categorias.loadCategorias();
-  }, [dispatch.categorias, dispatch.dentes, dispatch.documentos, dispatch.servicos, dispatch.users]);
-
+  }, [
+    dispatch.categorias,
+    dispatch.dentes,
+    dispatch.documentos,
+    dispatch.servicos,
+    dispatch.users,
+  ]);
 
   let options = [];
 
@@ -40,40 +45,36 @@ function Emitir() {
   }
 
   return (
-    <div className="page-content-wrapper">
-      <SubHeader title="Serviços" />
-      <div className="page-content">
-        <div className="row">
-          <div className="col-sm-12 col-md-12 col-lg-12">
-            <div className="card card-box">
-              <div className="card-head">
+    <div className='page-content-wrapper'>
+      <SubHeader title='Serviços' />
+      <div className='page-content'>
+        <div className='row'>
+          <div className='col-sm-12 col-md-12 col-lg-12'>
+            <div className='card card-box'>
+              <div className='card-head'>
                 <header>Novo Orçamento</header>
               </div>
-              <div className="card-body" style={{ display: 'flex' }}>
-                <div className="col-lg-6 p-t-20">
-                  <div className="col-lg-12 p-t-20">
+              <div className='card-body' style={{ display: 'flex' }}>
+                <div className='col-lg-6 p-t-20'>
+                  <div className='col-lg-12 p-t-20'>
                     {users && (
                       <Autocomplete
-                        id="combo-box-demo"
+                        id='combo-box-demo'
                         options={users}
                         onChange={(event, value) => setCliente(value)}
                         onClick={() => setCliente()}
                         getOptionLabel={(option) => option.nome}
                         style={{ minWidth: 300 }}
                         renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Cliente"
-                            variant="outlined"
-                          />
+                          <TextField {...params} label='Cliente' variant='outlined' />
                         )}
                       />
                     )}
                   </div>
-                  <div className="col-lg-12 p-t-20">
-                    <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
+                  <div className='col-lg-12 p-t-20'>
+                    <div className='mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width'>
                       <Autocomplete
-                        id="grouped-demo"
+                        id='grouped-demo'
                         options={options.sort(
                           (a, b) => -b.firstLetter.localeCompare(a.firstLetter)
                         )}
@@ -83,36 +84,21 @@ function Emitir() {
                         getOptionLabel={(option) => option.nome}
                         style={{ minwidth: 300 }}
                         renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Tratamento"
-                            variant="outlined"
-                          />
+                          <TextField {...params} label='Tratamento' variant='outlined' />
                         )}
                       />
                     </div>
-                    <div className="mdl-textfield mdl-js-textfield txt-full-width">
-                      <textarea
-                        className="mdl-textfield__input"
-                        rows="4"
-                        id="education"
-                      ></textarea>
-                      <label className="mdl-textfield__label" for="text7">
+                    <div className='mdl-textfield mdl-js-textfield txt-full-width'>
+                      <textarea className='mdl-textfield__input' rows='4' id='education'></textarea>
+                      <label className='mdl-textfield__label' for='text7'>
                         Observações
                       </label>
                     </div>
-                    <div class="col-lg-12 p-t-20 text-center">
-                  
-                    </div>
+                    <div class='col-lg-12 p-t-20 text-center'></div>
                   </div>
                 </div>
-                <div className="col-sm-12 col-md-6 col-lg-6">
-                  {cliente && (
-                    <Dentes
-                      cliente={cliente.id}
-                      servico={tratamento}
-                    />
-                  )}
+                <div className='col-sm-12 col-md-6 col-lg-6'>
+                  {cliente && <Dentes cliente={cliente.id} servico={tratamento} />}
                 </div>
               </div>
             </div>
@@ -123,5 +109,4 @@ function Emitir() {
   );
 }
 
-
-export default (Emitir);
+export default Emitir;

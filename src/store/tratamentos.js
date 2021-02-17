@@ -37,8 +37,7 @@ export default {
         //this.setLoading(true);
         const { id, estado } = payload;
         const response = await patch(replaceUrls(apiUrls.editarTratamento, { id }), { estado });
-        // if (response && response.status === 200) {
-        // }
+        return response.data;
       } catch (error) {
         //TODO: HANDLE ERROR
       }
@@ -46,7 +45,6 @@ export default {
 
     async loadById(payload, state) {
       try {
-        console.log('hey');
         //this.setLoading(true);
         const { id } = payload;
         const response = await get(replaceUrls(apiUrls.getTratamentoByUserId, { id }));
@@ -68,6 +66,7 @@ export default {
           dente_id: id,
         });
         if (response && response.status === 200) {
+          return response.data
         }
       } catch (error) {
         //TODO: HANDLE ERROR

@@ -70,50 +70,61 @@ function Editar({ ...props }) {
     }
   };
 
-  const handleSubmit = async () => {
+
+  const handleCick2 = async () => {
     const idCliente = cliente.cliente.id;
     const { value1, value2 } = props;
-    for (const selecionado of denteSelecionado) {
-      let estado = 'bom';
-      if (selecionado.servico.categoria_id === 2) {
-        estado = 'inexistente';
-      }
-      const payload = {
-        cliente_id: cliente.cliente.id,
-        estado,
-        id: selecionado.id,
-      };
-      const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
-      if(jaExiste > -1){
-        const payload2 = { id: tratamentos[jaExiste].id, estado}
-        await dispatch.tratamentos.editarTratamento(payload2);
-      }
-      else{
-        await dispatch.tratamentos.inserirTratamentos(payload);
-      }
-      const formData = new FormData();
-      formData.append('cliente_id', idCliente);
-      formData.append('servico_id', selecionado.servico.id);
-      if (props.image?.image) {
-        formData.append('image', props.image.image);
-      }
-      await dispatch.consultas.inserirConsulta(formData);
-    }
-    await dispatch.dentes.removeDentes();
-    const obj = {};
-    _.map(Object.values(value2), (numero, idx, i, a) => {
-      obj[value1[idx]] = numero;
-    });
-    for (const n in obj) {
-      const p = _.find(produtos, { id: parseInt(n, 10) });
-      const payload = {
-        id: parseInt(n, 10),
-        quantidade: p?.quantidade - parseInt(obj[n], 10),
-      };
-      await dispatch.produtos.editarProdutos(payload);
-    }
-    history.push('/verConsultas');
-  };
+        const formData = new FormData();
+        formData.append('cliente_id', idCliente);
+        if (props.image?.image) {
+          formData.append('image', props.image.image);
+
+        }
+        const consulta =  await Promise.resolve(dispatch.consultas.inserirConsulta(formData));
+
+        for (const selecionado of denteSelecionado) {
+          let estado = 'bom';
+          if (selecionado.servico.categoria_id === 2) {
+            estado = 'inexistente';
+          }
+          const payload = {
+            cliente_id: idCliente,
+            estado,
+            id: selecionado.id,
+          };
+          const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
+          let tratamento = null;
+          if(jaExiste > -1){
+            const payload2 = { id: tratamentos[jaExiste].id, estado}
+            tratamento = await Promise.resolve(dispatch.tratamentos.editarTratamento(payload2))
+          }
+          else{
+            tratamento = await Promise.resolve(dispatch.tratamentos.inserirTratamentos(payload))
+          }
+          const payload3 = {
+            consulta_id:consulta.id,
+            tratamento_id:tratamento.id,
+            servico_id:selecionado.servico.id
+          };
+          await dispatch.consultas.consultaInsertDetails(payload3)
+        }
+
+        await dispatch.dentes.removeDentes();
+        const obj = {};
+        _.map(Object.values(value2), (numero, idx, i, a) => {
+          obj[value1[idx]] = numero;
+        });
+        for (const n in obj) {
+          const p = _.find(produtos, { id: parseInt(n, 10) });
+          const payload = {
+            id: parseInt(n, 10),
+            quantidade: p?.quantidade - parseInt(obj[n], 10),
+          };
+          await dispatch.produtos.editarProdutos(payload);
+        }
+        history.push('/verConsultas');
+        
+  }
 
   return (
     <>
@@ -130,7 +141,7 @@ function Editar({ ...props }) {
         <button
           type="button"
           className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-          onClick={handleSubmit}
+          onClick={handleCick2}
         >
           Gravar
         </button>

@@ -36,6 +36,7 @@ function Informacoes() {
         return dentes[index].coords;
       }
     }
+    console.log(cliente)
 
     const setTreated = async () => {
       const novosDentes = await tratamentos.map((v, i) => ({
@@ -60,7 +61,7 @@ function Informacoes() {
     ) {
       setTreated();
     }
-  }, [tratamentos, dentes, setTreatTooth, treatTooth]);
+  }, [tratamentos, dentes, setTreatTooth, treatTooth, cliente]);
 
   return (
     <div className="page-content-wrapper">
@@ -166,9 +167,10 @@ function Informacoes() {
                               <tr>
                                 <th className="center"></th>
                                 <th className="center"> Nome </th>
-                                <th className="center"> Serviço </th>
-                                <th className="center"> Data</th>
-                                <th className="center"> Status</th>
+                                <th className="center"> Data </th>
+                                <th className="center"> Número de Serviços</th>
+                                <th className="center"> Total </th>
+                                <th className="center"> Status </th>
                               </tr>
                             </thead>
                             {cliente.cliente && <Table id={cliente.cliente} />}
