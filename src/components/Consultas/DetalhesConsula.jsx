@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import SubHeader from '../SubHeader/SubHeader';
 import { connect } from 'react-redux';
 import { Link, withRouter } from 'react-router-dom';
-import moment from 'moment';
 import Modal from '@material-ui/core/Modal';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import { TextField } from '@material-ui/core';
+import _ from 'lodash';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -38,8 +38,8 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
   const [open, setOpen] = useState(false);
   const [modalStyle] = useState(getModalStyle);
   console.log(props);
-  const { cliente, servico, consulta } = props.location.query;
-  const divida = servico.custo - consulta.pagamento;
+  const { consulta, consulta:{cliente, tratamentos} } = props.location.query;
+  const divida = consulta.custo - consulta.pagamento;
   const [pagamento, setPagamento] = useState({
     metodo: 'Multibanco',
     recebido: divida,
@@ -51,7 +51,7 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
   const fazerPagamento = async (e) => {
     e.preventDefault();
     await inserirPagamento({
-      cliente_id: cliente.id,
+      cliente_id: consulta.cliente.id,
       consulta_id: consulta.id,
       metodo: pagamento.metodo,
       valor: pagamento.recebido,
@@ -63,7 +63,6 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
     });
     props.history.push('/verConsultas');
   };
-  console.log(consulta);
   const body = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">Novo Pagamento</h2>
@@ -154,7 +153,7 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
           <div className="col-sm-12 col-md-8 col-lg-8">
             <div className="card card-box">
               <div className="card-head">
-                <header>{servico.nome}</header>
+                <header>Serviços Efetuados</header>
               </div>
               <div className="card-body ">
                 <div className="table-scrollable">
@@ -166,25 +165,25 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
                       <tr>
                         <th className="center"></th>
                         <th className="center"> Serviço </th>
-                        <th className="center"> Data</th>
+                        <th className="center"> Dente </th>
                         <th className="center"> Custo </th>
-                        <th className="center"> Montante Pago </th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr className="odd gradeX" key={1}>
+                   
+                      {_.map(tratamentos, (tratamento, index) => {
+                        return (
+                          <tr className="odd gradeX" key={1}>
                         <td className="user-circle-img">
                           <img src="assets/img/user/user1.jpg" alt="" />
                         </td>
-                        <td className="center">{servico.nome}</td>
-                        <td className="center">
-                          {moment(consulta.created_at).format(
-                            'YYYY-MM-DD HH:mm'
-                          )}
+                        <td className="center">{tratamento.servico.nome}</td>
+                        <td className="center">{tratamento.dente}
                         </td>
-                        <td className="center">{servico.custo}</td>
-                        <td className="center">{consulta.pagamento}</td>
-                      </tr>
+                        <td className="center">{tratamento.servico.custo}€
+                        </td>
+                      </tr>);
+                      })}
                     </tbody>
                   </table>
                   {divida > 0 && (
@@ -209,7 +208,7 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
             </div>
           </div>
           {consulta.image && (
-            <div className="col-sm-12 col-md-8 col-lg-8">
+            <div className="col-sm-12 col-md-12 col-lg-12">
               <div className="card card-box">
                 <div className="card-head">
                   <header>Imagem</header>

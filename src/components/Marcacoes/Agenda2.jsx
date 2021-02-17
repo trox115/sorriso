@@ -120,7 +120,6 @@ function Agenda2({
           nome: novoUser.nome,
         },
       });
-      console.log(newEvent)
     }
     const color = handleEventColor(newEvent.tipo)
     const marcacao = {
@@ -144,7 +143,6 @@ function Agenda2({
   function handleEventColor(tipo) {
     switch (tipo) {
       case 'dentista':
-        console.log(tipo)
         return 'rgba(34, 167, 240, 1)'
 
       case 'medicina':
@@ -223,7 +221,20 @@ function Agenda2({
         />
       )}
 
-      <Autocomplete
+      
+      {novoCliente && (
+        <TextField
+          onChange={(event, value) => setUser({ nome: event.target.value })}
+          name="nome"
+          label="Nome"
+          fullWidth
+          value={novoUser.nome}
+        />
+
+        
+      )}
+
+<Autocomplete
           options={['dentista', 'psicologia', 'medicina', 'nutrição']}
           getOptionLabel={(option) => option}
           onChange={(event, value) =>
@@ -235,15 +246,6 @@ function Agenda2({
           )}
         />
 
-      {novoCliente && (
-        <TextField
-          onChange={(event, value) => setUser({ nome: event.target.value })}
-          name="nome"
-          label="Nome"
-          fullWidth
-          value={novoUser.nome}
-        />
-      )}
       <br />
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardTimePicker

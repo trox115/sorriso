@@ -47,18 +47,31 @@ export default {
         //TODO: HANDLE ERROR
       }
     },
-
+    
     async inserirConsulta(payload, state) {
       try {
-        console.log(payload);
-        //this.setLoading(true);
-
+        console.log(
+        payload)
         const response = await post(
           replaceUrls(apiUrls.inserirConsulta),
           payload
         );
         if (response && response.status === 200) {
-          console.log('done');
+          return response.data;
+        }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
+
+    async consultaInsertDetails(payload, state) {
+      try {
+        const response = await post(
+          replaceUrls(apiUrls.detalhesConsulta),
+          payload
+        );
+        if (response && response.status === 200) {
+          return response.data;
         }
       } catch (error) {
         //TODO: HANDLE ERROR

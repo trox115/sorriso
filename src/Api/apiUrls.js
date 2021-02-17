@@ -20,6 +20,7 @@ export const apiUrls = {
   consultas: '/consultas',
   inserirConsulta: '/inserirConsulta',
   editarConsulta: '/editarConsulta/:id',
+  detalhesConsulta: '/detalhesConsulta',
 
   //Tratamentos
   inserirTratamento: '/inserirTratamento',

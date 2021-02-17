@@ -24,7 +24,8 @@ function VerConsultas() {
                         <th className="center"></th>
                         <th className="center"> Paciente </th>
                         <th className="center"> Data</th>
-                        <th className="center"> Serviço </th>
+                        <th className="center"> Número de Serviços </th>
+                        <th className="center"> Custo </th>
                         <th className="center"> Status</th>
                       </tr>
                     </thead>
