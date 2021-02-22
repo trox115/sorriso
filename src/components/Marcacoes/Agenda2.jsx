@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import moment from 'moment';
@@ -35,7 +35,6 @@ function getModalStyle() {
     transform: `translate(-${top}%, -${left}%)`,
   };
 }
-
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: 'absolute',
@@ -56,6 +55,7 @@ function Agenda2({
   editarmarcacoes,
   inserirCliente,
 }) {
+  const dispatch = useDispatch()
   const [novoUser, setUser] = useState({
     nome: null,
     bi: '',
@@ -72,6 +72,7 @@ function Agenda2({
   const [modalStyle] = useState(getModalStyle);
   const [novoCliente, setNovo] = useState(false);
   const [openModal, setOpen] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
   const [newEvent, setNewEvent] = useState({
     title: 'Nova Marcação',
     start: null,
@@ -88,6 +89,8 @@ function Agenda2({
     loading();
   }, [getClientes, loadMarcacoes]);
 
+  
+
   useEffect(() => {
     if (!_.isEmpty(marcacoes.marcacoes) && !_.isEmpty(users.users)) {
       const novosEventos = [];
@@ -96,6 +99,7 @@ function Agenda2({
         novosEventos.push({
           id: marcacao.id,
           title: users.users[user].nome,
+          tipo: marcacao.tipo,
           start: marcacao.start,
           end: marcacao.end,
           clienteId: users.users[user].id,
@@ -107,7 +111,10 @@ function Agenda2({
   }, [getClientes, loadMarcacoes, marcacoes, users]);
 
   useEffect(() => {}, [newEvent, events]);
-
+  const remove = async (e) => {
+    await dispatch.marcacoes.removerMarcao({id:newEvent.id});
+        setOpenEdit(false);
+  }
   const handleChange = async (e) => {
     const uId = users.users[users.users.length - 1].id + 1;
     if (novoUser.nome !== null) {
@@ -173,16 +180,17 @@ function Agenda2({
   const classes = useStyles();
 
   const clickEvent = (eventClickInfo) => {
+    console.log(eventClickInfo);
     setNewEvent({
-      title: eventClickInfo.event.title,
-      start: eventClickInfo.el.fcSeg.start,
-      end: eventClickInfo.el.fcSeg.end,
+      id: parseInt(eventClickInfo.event.id, 10),
+      cliente: eventClickInfo.event.title,
+      start: moment(eventClickInfo.event.start),
+      end: moment(eventClickInfo.event.end),
     });
-    setOpen(true);
+    setOpenEdit(true);
   };
 
   const dragEvent = (eventClickInfo) => {
-    console.log(eventClickInfo);
     const payload = {
       id: parseInt(eventClickInfo.event.id, 10),
       cliente_id: eventClickInfo.event.extendedProps.clienteId,
@@ -191,6 +199,8 @@ function Agenda2({
     };
     editarmarcacoes(payload);
   };
+
+  
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
@@ -281,6 +291,100 @@ function Agenda2({
       <button onClick={handleChange}> Submeter </button>
     </div>
   );
+
+  console.log(newEvent)
+  const body2 = (
+    <div style={modalStyle} className={classes.paper}>
+      <h2 id="simple-modal-title">Apagar Marcação</h2>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={novoCliente}
+            onChange={() => setNovo(!novoCliente)}
+            name="checkedB"
+            color="primary"
+          />
+        }
+        label="Novo Cliente?"
+      />
+      {!novoCliente && (
+        <Autocomplete
+          options={users.users}
+          getOptionLabel={(option) => option.nome}
+          onChange={(event, value) =>
+            setNewEvent({ ...newEvent, cliente: value })
+          }
+          defaultValue={newEvent.cliente}
+          style={{ minWidth: 300 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Cliente" variant="outlined" />
+          )}
+        />
+      )}
+
+      
+      {novoCliente && (
+        <TextField
+          onChange={(event, value) => setUser({ nome: event.target.value })}
+          name="nome"
+          label="Nome"
+          fullWidth
+          value={novoUser.nome}
+        />
+
+        
+      )}
+
+<Autocomplete
+          options={['dentista', 'psicologia', 'medicina', 'nutrição']}
+          getOptionLabel={(option) => option}
+          onChange={(event, value) =>
+            setNewEvent({ ...newEvent, tipo: value })
+          }
+          style={{ minWidth: 300 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Tipo" variant="outlined" />
+          )}
+        />
+
+      <br />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardTimePicker
+          margin="normal"
+          label="Inicio"
+          fullWidth
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+          ampm={false}
+          onChange={(event, value) =>
+            setNewEvent({ ...newEvent, start: event })
+          }
+          value={newEvent.start}
+        />
+      </MuiPickersUtilsProvider>
+      <br />
+      <br />
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardTimePicker
+          margin="normal"
+          label="Fim"
+          fullWidth
+          ampm={false}
+          KeyboardButtonProps={{
+            'aria-label': 'change time',
+          }}
+          value={newEvent.end}
+          onChange={(event, value) => setNewEvent({ ...newEvent, end: event })}
+        />
+      </MuiPickersUtilsProvider>
+      <br></br>
+      <button onClick={handleChange}> Submeter </button>
+      <button onClick={remove}> Apagar </button>
+
+    </div>
+  );
+
   return (
     <div className="page-content-wrapper">
       <SubHeader title="Serviços" />
@@ -319,6 +423,14 @@ function Agenda2({
                   aria-describedby="simple-modal-description"
                 >
                   {body}
+                </Modal>
+                <Modal
+                  open={openEdit}
+                  onClose={() => setOpenEdit(false)}
+                  aria-labelledby="simple-modal-title"
+                  aria-describedby="simple-modal-description"
+                >
+                  {body2}
                 </Modal>
               </div>
             </div>

@@ -6,7 +6,6 @@ import NavigationMenu from '../NavigationMenu/NavigationMenu';
 
 function ProtectedRoute({ component: Component, ...rest }) {
   const auth = localStorage.getItem('token')
-  console.log(auth)
   return (
     <Route
     // eslint-disable-next-line react/jsx-props-no-spreading

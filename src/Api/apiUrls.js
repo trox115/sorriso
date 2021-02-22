@@ -41,6 +41,7 @@ export const apiUrls = {
   inserirMarcacao: '/inserirMarcacao',
   marcacoes: '/marcacoes',
   editarMarcacao: '/editar/marcacao/:id',
+  removerMarcacao: '/remover/marcacao/:id',
 
   //Pagamentos
   inserirPagamento: '/inserirPagamento',
@@ -48,6 +49,7 @@ export const apiUrls = {
   //Videos
   videos: '/videos',
   inserirVideo: '/inserVideo',
+  dashboard: '/dashboard',
 
   //Sessions
   login: '/sessions',

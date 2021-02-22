@@ -5,7 +5,7 @@ import { apiUrls, replaceUrls } from '../Api/apiUrls';
 export default {
   state: {
     documentos: [],
-    categoria: [],
+    docCategoria: [],
     orcamentos: [],
     orcamento: {},
   },
@@ -16,7 +16,7 @@ export default {
       return { ...state, documentos: payload };
     },
     setCategoria(state, payload) {
-      return { ...state, categoria: payload };
+      return { ...state, docCategoria: payload };
     },
     setOrcamentos(state, payload) {
       return { ...state, orcamentos: payload };

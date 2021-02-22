@@ -59,11 +59,12 @@ export default {
     async inserirTratamentos(payload, state) {
       try {
         //this.setLoading(true);
-        const { id, cliente_id, estado } = payload;
+        const { id, cliente_id, estado,obs } = payload;
         const response = await post(replaceUrls(apiUrls.inserirTratamento), {
           cliente_id,
           estado,
           dente_id: id,
+          obs
         });
         if (response && response.status === 200) {
           return response.data

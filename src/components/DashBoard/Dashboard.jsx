@@ -1,9 +1,16 @@
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux'
 import { Link } from 'react-router-dom';
 
 export default function DashBoard() {
+  const dispatch = useDispatch()
+  const {dashboard} = useSelector(state => state.videos)
+  useEffect(() => {
+    dispatch.videos.getDashboard();
+  }, [dispatch.videos])
+  const diferencaMar = 0
   return (
     <div className="page-content-wrapper">
       <div className="page-content">
@@ -33,12 +40,12 @@ export default function DashBoard() {
                 </span>
                 <div className="info-box-content">
                   <span className="info-box-text">Marcações para hoje</span>
-                  <span className="info-box-number">15</span>
+                  <span className="info-box-number">{dashboard.hoje?.length}</span>
                   <div className="progress">
-                    <div className="progress-bar width-60"></div>
+                    <div className={`progress-bar width-${diferencaMar}`}></div>
                   </div>
                   <span className="progress-description">
-                    60% + nos últimos 28 dias
+                     + {diferencaMar}% nos últimos 30 dias
                   </span>
                 </div>
               </div>
@@ -50,12 +57,12 @@ export default function DashBoard() {
                 </span>
                 <div className="info-box-content">
                   <span className="info-box-text">Orçamentos realizados</span>
-                  <span className="info-box-number">155</span>
+                  <span className="info-box-number">{dashboard.orcamentos}</span>
                   <div className="progress">
                     <div className="progress-bar width-40"></div>
                   </div>
                   <span className="progress-description">
-                    40% + nos últimos 3 dias
+                     + 100% nos últimos 30 dias
                   </span>
                 </div>
               </div>

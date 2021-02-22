@@ -10,7 +10,6 @@ export default {
   reducers: {
     loaded: (state, payload) => payload,
     setAuth(state, payload) {
-      console.log(payload)
       return { user: payload };
     },
   },

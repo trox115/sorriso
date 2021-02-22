@@ -63,5 +63,20 @@ export default {
         //TODO: HANDLE ERROR
       }
     },
+
+    async removerMarcao(payload, state) {
+      try {
+        //this.setLoading(true);
+        const { id } = payload;
+
+        const response = await patch(
+          replaceUrls(apiUrls.removerMarcacao, { id }))
+        if (response) {
+          this.setMarcacoes(response.data);
+        }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
   }),
 };
