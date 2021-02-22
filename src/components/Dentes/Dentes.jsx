@@ -16,7 +16,6 @@ function Editar({ ...props }) {
   const { produtos } = useSelector((state) => state.produtos);
   const dispatch = useDispatch();
   const history = useHistory();
-
   useEffect(() => {
     dispatch.dentes.loadDentes();
   }, [dispatch.dentes, props.cliente]);
@@ -54,6 +53,7 @@ function Editar({ ...props }) {
       id: area.id,
       tipo: categoria === 2 ? 0 : 1,
       servico: props.servico,
+      nome:area.nome
     };
     const index = _.findIndex(denteSelecionado, {
       id: area.id,
@@ -73,6 +73,8 @@ function Editar({ ...props }) {
 
   const handleCick2 = async () => {
     const idCliente = cliente.cliente.id;
+    const obs = props.obs.split('\n');
+
     const { value1, value2 } = props;
         const formData = new FormData();
         formData.append('cliente_id', idCliente);
@@ -82,7 +84,7 @@ function Editar({ ...props }) {
         }
         const consulta =  await Promise.resolve(dispatch.consultas.inserirConsulta(formData));
 
-        for (const selecionado of denteSelecionado) {
+        for (const [i, selecionado] of denteSelecionado.entries()) {
           let estado = 'bom';
           if (selecionado.servico.categoria_id === 2) {
             estado = 'inexistente';
@@ -91,6 +93,7 @@ function Editar({ ...props }) {
             cliente_id: idCliente,
             estado,
             id: selecionado.id,
+            obs: obs[i]
           };
           const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
           let tratamento = null;
@@ -104,7 +107,7 @@ function Editar({ ...props }) {
           const payload3 = {
             consulta_id:consulta.id,
             tratamento_id:tratamento.id,
-            servico_id:selecionado.servico.id
+            servico_id:selecionado.servico.id,
           };
           await dispatch.consultas.consultaInsertDetails(payload3)
         }

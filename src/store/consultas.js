@@ -50,8 +50,7 @@ export default {
     
     async inserirConsulta(payload, state) {
       try {
-        console.log(
-        payload)
+        console.log(payload)
         const response = await post(
           replaceUrls(apiUrls.inserirConsulta),
           payload

@@ -50,7 +50,7 @@ function AvaliacaoInicial() {
                     <div className="col-lg-12 p-t-20">
                       <div className="mdl-textfield mdl-js-textfield mdl-textfield--floating-label txt-full-width">
                         <Autocomplete
-                          options={['Não Tratado', 'Tratado', 'Não Existente']}
+                          options={['Cariado', 'Tratado', 'Não Existente']}
                           getOptionLabel={(option) => option}
                           onChange={(event, value) => setEstado(value)}
                           onFocus

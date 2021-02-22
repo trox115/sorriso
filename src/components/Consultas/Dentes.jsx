@@ -1,108 +1,106 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ImageMapper from 'react-image-mapper';
-import dentes from '../../img/dentes.jpg';
+import dentesImg from '../../img/dentes.jpg';
 
-function Editar({ tratamentos, getTratamentos, inserirTratamentos, ...props }) {
-  const [consultas, setConsultas] = useState([]);
-  const [selected, setSelected] = useState(null);
-  const [dent, setMap] = useState({
-    name: 'my-map',
-    areas: props.dentes,
-  });
+function Editar({ getTratamentos, inserirTratamentos, ...props }) {
+  const { dentes } = useSelector((state) => state.dentes);
+  const {
+    cliente: { tratamentos },
+  } = useSelector((state) => state.users);
+  const { denteSelecionado } = useSelector((state) => state.dentes);
+  const dispatch = useDispatch();
+  //const history = useHistory();
 
   useEffect(() => {
-    getTratamentos();
-    return () => {
-      setTrat([]);
-    };
-  }, [getTratamentos]);
+    dispatch.dentes.loadDentes();
+  }, [dispatch.dentes, props.cliente]);
 
-  const [tratCli, setTrat] = useState([]);
   useEffect(() => {
-    const index = _.findIndex(dent.areas, { id: selected });
-    if (index !== -1 && props.tratamento?.categoria) {
-      setMap({ ...dent });
-      dent.areas[index].preFillColor =
-        props.tratamento.categoria === 'Extração'
-          ? 'rgba(255, 0, 0, 0.3)'
-          : 'green';
-    } else if (index !== -1 && props.estado) {
-      dent.areas[index].preFillColor =
-        props.estado === 'Não Tratado'
-          ? 'rgba(255, 0, 0, 0.3)'
-          : props.estado === 'Tratado'
-          ? 'rgba(0, 230, 64, 0.3)'
-          : 'black';
-    }
+    dispatch.users.getUserInfo({ id: props.cliente });
+  }, [dispatch.users, props.cliente]);
 
-    if (_.isEmpty(tratCli)) {
-      let filtered = [{ estado: 'Not found' }];
-      filtered = _.filter(tratamentos.tratamentos, {
-        cliente_id: props.cliente,
+  useEffect(() => {
+    const novos = dentes;
+    const ids = [];
+    _.map(tratamentos, (tratamento, index) => {
+      ids.push(tratamento.dente_id);
+      const preFillColor =
+        tratamento.estado === 'bom'
+          ? 'rgba(0, 230, 64, 0.5)'
+          : tratamento.estado === 'inexistente'
+          ? 'rgba(0, 0, 0, 0.5)'
+          : 'rgba(242, 38, 19, 0.5)';
+      _.map(novos, (dente) => {
+        const index = _.findIndex(denteSelecionado, { id: dente.id });
+        if (dente.id === tratamento.dente_id) {
+          dente['preFillColor'] = preFillColor;
+        } else if (ids.includes(dente.id) === false && index < 0) {
+          delete dente['preFillColor'];
+        }
       });
-
-      setTrat(filtered);
-    }
-  }, [
-    dent,
-    selected,
-    setSelected,
-    tratamentos,
-    getTratamentos,
-    setTrat,
-    props.tratamento,
-    props.cliente,
-    props.estado,
-    tratCli,
-  ]);
-
-  const clicked = (area) => {
-    const index = area.id === selected;
-    console.log(area.id);
-    if (!index) {
-      setSelected(area.id);
-      setConsultas([...consultas, { id: area.id, estado: props.estado }]);
-      console.log(consultas);
+    });
+    console.log(novos)
+    dispatch.dentes.inserirNovosDentes(novos);
+    console.log(novos)
+  }, [props.cliente, tratamentos, dentes, dispatch.dentes]);
+ 
+  const clicked = async (area) => {
+    console.log(props.estado)
+    const categoria = props.estado;
+    const selected = {
+      id: area.id,
+      tipo: categoria === 'Tratado' ? 1 : 0,
+      servico: props.servico,
+    };
+    const index = _.findIndex(denteSelecionado, {
+      id: area.id,
+    });
+    if (index > -1) {
+      dispatch.dentes.removeSelected({ id: area.id });
     } else {
-      const index = _.findIndex(dent.areas, { id: selected });
-      dent.areas[index].preFillColor = null;
-      setSelected(null);
+      const treatedTooth = _.findIndex(tratamentos, { dente_id: area.id });
+      if (treatedTooth > -1) {
+        tratamentos[treatedTooth].estado = categoria === 2 ? 'inexistente' : 'bom';
+        //await dispatch.dentes.changePrefillColor(selected);
+      }
+      await dispatch.dentes.selecionarDente(selected);
     }
   };
 
   const handleSubmit = async () => {
-    for (const t of consultas) {
-      let estado = 'bom';
-      if (t.estado === 'Não Tratado') {
-        estado = 'Não';
-      } else if (t.estado === 'Não Existente') {
-        estado = 'inexistente';
+    const idCliente = props.cliente
+    for (const [i, selecionado] of denteSelecionado.entries()) {
+      let estado = 'mau';
+      if (selecionado.tipo === 1) {
+        estado = 'bom';
       }
-      inserirTratamentos({ cliente_id: props.cliente, id: t.id, estado });
-    }
-  };
-
-  // for (let t = 0; t < tratCli.length; t++) {
-  //   const index = _.findIndex(dent.areas, { id: tratCli[t].dente_id });
-  //   if (index !== -1) {
-  //     if (tratCli[t].estado !== 'Não') {
-  //       dent.areas[index].preFillColor = 'green';
-  //       console.log('change');
-  //     } else if (tratCli[t].estado === 'Não') {
-  //       dent.areas[index].preFillColor = 'red';
-  //     }
-  //   }
-  // }
+      const payload = {
+        cliente_id: idCliente,
+        estado,
+        id: selecionado.id,
+      };
+      const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
+      let tratamento = null;
+      if(jaExiste > -1){
+        const payload2 = { id: tratamentos[jaExiste].id, estado}
+       await Promise.resolve(dispatch.tratamentos.editarTratamento(payload2))
+      }
+      else{
+        await Promise.resolve(dispatch.tratamentos.inserirTratamentos(payload))
+      }
+  }
+}
 
   if (props.cliente) {
-    console.log(props);
     return (
       <>
         <ImageMapper
-          src={dentes}
-          map={dent}
+          src={dentesImg}
+          map={{ name: 'my-map', areas: dentes }}
           onClick={(area) => clicked(area)}
           width={500}
         />

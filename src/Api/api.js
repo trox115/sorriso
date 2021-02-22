@@ -32,7 +32,8 @@ export async function get(url) {
 }
 
 export async function remove(url) {
-  const response = await doRequest(url, {}, 'delete');
+  const response = await doDelete(url, {}, 'delete');
+  console.log(process.env.REACT_APP_BASE_URL + url);
   return response;
 }
 
@@ -43,10 +44,11 @@ async function doRequest(url, payload, method) {
     headers: {
       'content-type': 'application/json',
       'X-User-Email': localStorage.getItem('email'),
-      'X-User-Token': localStorage.getItem('token')
+      'X-User-Token': localStorage.getItem('token'),
     },
     data: payload,
   };
+
   try {
     const response = await once(config, config.url.split('?')[0]);
     return response;
@@ -55,4 +57,26 @@ async function doRequest(url, payload, method) {
 
     return response;
   }
+}
+
+async function doDelete(url, payload, method) {
+
+const config = {
+  url: process.env.REACT_APP_BASE_URL + url,
+  method,
+  headers: {
+    'content-type': 'application/json',
+    'X-User-Email': localStorage.getItem('email'),
+    'X-User-Token': localStorage.getItem('token'),
+  },
+};
+
+try {
+  const response = await once(config, config.url.split('?')[0]);
+  return response;
+} catch (error) {
+  const { response } = error;
+
+  return response;
+}
 }

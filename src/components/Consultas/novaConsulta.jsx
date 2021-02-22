@@ -20,9 +20,11 @@ function NovaConsulta({
   const [value2, setValue2] = useState({});
   const [value1, setValue1] = useState([]);
   const [image, setImage] = useState();
+  const [obs, setObs] = useState('');
   const [cliente, setCliente] = useState();
   const [tratamento, setTratamento] = useState();
   const dispatch = useDispatch();
+  const {denteSelecionado} = useSelector(state => state.dentes)
   const { users } = useSelector((state) => state.users);
   useEffect(() => {
     dispatch.users.loadClientes();
@@ -36,6 +38,10 @@ function NovaConsulta({
     newMaterial.push(1);
     addEquipamento([...newMaterial]);
   };
+
+  const handleObs = (e) => {
+    setObs(e.target.value);
+  }
 
   const handleChange = (e) => {
     setValue2({ ...value2, [e.target.name]: e.target.value });
@@ -150,14 +156,15 @@ function NovaConsulta({
                       />
                     </div>
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
-                      <textarea
-                        className="mdl-textfield__input"
-                        rows="4"
-                        id="education"
-                      ></textarea>
-                      <label className="mdl-textfield__label" for="text7">
-                        Observações
-                      </label>
+                    <TextField
+          id="outlined-multiline-static"
+          label="Observações"
+          multiline
+          onChange={handleObs}
+          rows={4}
+          fullWidth
+          variant="outlined"
+        />
                     </div>
                     <div class="col-lg-12 p-t-20 text-center">
                       <button
@@ -178,6 +185,39 @@ function NovaConsulta({
                       </label>
                     </div>
                   </div>
+                  {denteSelecionado && (<div class="col-lg-12 p-t-20 text-center">
+                    SERVIÇOS SELECIONADOS
+                    <table
+                    className="table table-hover table-checkable order-column full-width"
+                    id="example4"
+                  >
+                    <thead>
+                      <tr>
+                        <th className="center"></th>
+                        <th className="center"> Dente </th>
+                        <th className="center"> Serviço </th>
+                        <th className="center"> Obs</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {_.map(denteSelecionado, (dente, index) => {
+                            const observacoes = obs.split('\n')
+                            return (
+                              <tr className="odd gradeX" key={index}>
+                            <td className="user-circle-img">
+                              <img src="assets/img/user/user1.jpg" alt="" />
+                            </td>
+                            <td className="center">{dente.nome}</td>
+                            <td className="center">{dente.servico.nome}
+                            </td>
+                            <td className="center">{observacoes[index]}
+                            </td>
+                          </tr>);
+                          })}
+                        </tbody>
+
+                    </table>
+                  </div>)}
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
                   {cliente && (
@@ -187,6 +227,7 @@ function NovaConsulta({
                       image={image}
                       value1={value1}
                       value2={value2}
+                      obs= {obs}
                     />
                   )}
                 </div>

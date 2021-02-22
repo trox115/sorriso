@@ -166,6 +166,7 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
                         <th className="center"></th>
                         <th className="center"> Serviço </th>
                         <th className="center"> Dente </th>
+                        <th className="center"> Observações </th>
                         <th className="center"> Custo </th>
                       </tr>
                     </thead>
@@ -179,6 +180,8 @@ function DetalhesConsula({ inserirPagamento, editarConsulta, ...props }) {
                         </td>
                         <td className="center">{tratamento.servico.nome}</td>
                         <td className="center">{tratamento.dente}
+                        </td>
+                        <td className="center">{tratamento.obs}
                         </td>
                         <td className="center">{tratamento.servico.custo}€
                         </td>
