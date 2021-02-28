@@ -8,16 +8,16 @@ function VerServicos({ getCategorias, getServicos }) {
   const { categorias } = useSelector((state) => state.categorias);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (_.isEmpty(servicos)) {
       dispatch.servicos.loadServicos();
-    }
-
-    if (_.isEmpty(categorias)) {
       dispatch.categorias.loadCategorias();
-    }
-  }, [servicos, categorias, dispatch.servicos, dispatch.categorias]);
-  const a = localStorage.getItem('token')
-  console.log(a)
+  
+  }, [dispatch.categorias, dispatch.servicos]);
+
+  const remove = async (id) => {
+    await dispatch.servicos.apagarServico({id})
+    await dispatch.servicos.loadServicos();
+  }
+
   return (
     <div className="page-content-wrapper">
       <SubHeader title="Serviços" />
@@ -63,7 +63,7 @@ function VerServicos({ getCategorias, getServicos }) {
                               >
                                 <i className="fa fa-pencil"></i>
                               </a>
-                              <button className="btn btn-tbl-delete btn-xs">
+                              <button className="btn btn-tbl-delete btn-xs" onClick={() => remove(servico?.id)}>
                                 <i className="fa fa-trash-o "></i>
                               </button>
                             </td>

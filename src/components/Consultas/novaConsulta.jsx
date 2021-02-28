@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SubHeader from '../SubHeader/SubHeader';
+import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { connect, useDispatch, useSelector } from 'react-redux';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 import Dentes from '../Dentes/Dentes';
 import './novaConsulta.css';
-
+import { SaveButton } from '../Botoes/Botoes';
 function NovaConsulta({
   produtos,
   getProdutos,
@@ -23,9 +26,11 @@ function NovaConsulta({
   const [obs, setObs] = useState('');
   const [cliente, setCliente] = useState();
   const [tratamento, setTratamento] = useState();
+  const [bocaToda, setBocaToda] = useState(false);
   const dispatch = useDispatch();
-  const {denteSelecionado} = useSelector(state => state.dentes)
+  const {denteSelecionado, dentes} = useSelector(state => state.dentes)
   const { users } = useSelector((state) => state.users);
+  const history = useHistory();
   useEffect(() => {
     dispatch.users.loadClientes();
     getProdutos();
@@ -38,6 +43,11 @@ function NovaConsulta({
     newMaterial.push(1);
     addEquipamento([...newMaterial]);
   };
+
+  const handleBocaToda = (e) => {
+    e.preventDefault();
+    setBocaToda(!bocaToda)
+  }
 
   const handleObs = (e) => {
     setObs(e.target.value);
@@ -65,6 +75,11 @@ function NovaConsulta({
     });
   }
 
+  const savebocaToda = async (e) => {
+    e.preventDefault();
+    await dispatch.consultas.inserirBocaToda({cliente_id:cliente.id, servico_id: tratamento.id, obs:obs})
+    history.push('verConsultas')
+  }
   return (
     <div className="page-content-wrapper">
       <SubHeader title="Serviços" />
@@ -154,6 +169,10 @@ function NovaConsulta({
                           />
                         )}
                       />
+                       <FormControlLabel
+        control={<Checkbox checked={bocaToda} onChange={handleBocaToda} name="checkedA" />}
+        label="O tratamento não tem dente específico"
+      />
                     </div>
                     <div className="mdl-textfield mdl-js-textfield txt-full-width">
                     <TextField
@@ -202,13 +221,15 @@ function NovaConsulta({
                         <tbody>
                           {_.map(denteSelecionado, (dente, index) => {
                             const observacoes = obs.split('\n')
+                            const indexDente = _.findIndex(dentes, {id: dente.id})
+                            const indexServico = _.findIndex(servicos.servicos, {id: dente.servico})
                             return (
                               <tr className="odd gradeX" key={index}>
                             <td className="user-circle-img">
                               <img src="assets/img/user/user1.jpg" alt="" />
                             </td>
-                            <td className="center">{dente.nome}</td>
-                            <td className="center">{dente.servico.nome}
+                            <td className="center">{dentes[indexDente].nome}</td>
+                            <td className="center">{servicos.servicos[indexServico].nome}
                             </td>
                             <td className="center">{observacoes[index]}
                             </td>
@@ -220,7 +241,7 @@ function NovaConsulta({
                   </div>)}
                 </div>
                 <div className="col-sm-12 col-md-6 col-lg-6">
-                  {cliente && (
+                  {cliente && tratamento && !bocaToda &&(
                     <Dentes
                       cliente={cliente.id}
                       servico={tratamento}
@@ -230,6 +251,10 @@ function NovaConsulta({
                       obs= {obs}
                     />
                   )}
+
+                  {bocaToda && 
+                  <SaveButton onClick={savebocaToda} />
+                  }
                 </div>
               </div>
             </div>

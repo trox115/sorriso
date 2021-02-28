@@ -20,6 +20,7 @@ import {
 import ptLocale from '@fullcalendar/core/locales/pt';
 
 import SubHeader from '../SubHeader/SubHeader';
+import { DeleteButton, SaveButton } from '../Botoes/Botoes';
 
 function rand() {
   return Math.round(Math.random() * 20) - 10;
@@ -288,11 +289,10 @@ function Agenda2({
         />
       </MuiPickersUtilsProvider>
       <br></br>
-      <button onClick={handleChange}> Submeter </button>
+      <SaveButton onClick={handleChange} />
     </div>
   );
 
-  console.log(newEvent)
   const body2 = (
     <div style={modalStyle} className={classes.paper}>
       <h2 id="simple-modal-title">Apagar Marcação</h2>
@@ -379,8 +379,8 @@ function Agenda2({
         />
       </MuiPickersUtilsProvider>
       <br></br>
-      <button onClick={handleChange}> Submeter </button>
-      <button onClick={remove}> Apagar </button>
+      <SaveButton onClick={handleChange} />
+      <DeleteButton onClick={remove} />
 
     </div>
   );

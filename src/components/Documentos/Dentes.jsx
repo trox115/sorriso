@@ -43,32 +43,25 @@ function Editar({ ...props }) {
   };
 
   const handleSubmit = async () => {
-    const orcamento = await Promise.resolve(
-      dispatch.documentos.inserirOrcamento({
-        cliente: cliente.cliente.id,
-        doc_categoria: 1,
-        servico: 1,
-      })
-    );
+    let detalhes = [];
     for (const selecionado of denteSelecionado) {
-      const estado = 'Não';
-      console.log(selecionado);
-      const payload = {
-        cliente_id: cliente.cliente.id,
-        estado,
-        id: selecionado.id,
-      };
-      console.log(selecionado.servico);
       const payload2 = {
         servico_id: selecionado.servico.id,
-        orcamento_id: orcamento.id,
         dente_id: selecionado.id,
       };
-      await dispatch.tratamentos.inserirTratamentos(payload);
-      await dispatch.documentos.inserirOrcamentoDetails(payload2);
+      detalhes.push(payload2);
+      //await dispatch.documentos.inserirOrcamentoDetails(payload2);
     }
+
+     await Promise.resolve(
+      dispatch.documentos.inserirOrcamento({
+        cliente: cliente.cliente.id,
+        doc_categoria: 3,
+        detalhes
+      })
+    );
     await dispatch.dentes.removeDentes();
-    history.push('/verClientes');
+    history.push('/verDocumentos')
   };
 
   return (

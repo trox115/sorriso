@@ -11,6 +11,7 @@ import marcacoes from './marcacoes';
 import pagamentos from './pagamentos';
 import videos from './Videos';
 import user from './user';
+import loading from './loading';
 
 const models = {
   users,
@@ -25,6 +26,7 @@ const models = {
   pagamentos,
   videos,
   user,
+  loading
 };
 
 const store = init({

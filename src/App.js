@@ -1,3 +1,8 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
+import axios from 'axios';
+import {useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 import NovaMarcacao from './components/Marcacoes/NovaMarcacao';
 import NovoCliente from './components/Clientes/NovoCliente';
@@ -12,6 +17,7 @@ import EditarMaterial from './components/Material/EditarMaterial';
 import inserirCategoria from './components/Servicos/inserirCategoria';
 import verConsultas from './components/Consultas/verConsultas';
 import DashBoard from './components/DashBoard/Dashboard';
+import Loading from './components/Loading/Loading';
 import Emitir from './components/Documentos/Emitir';
 import Agenda2 from './components/Marcacoes/Agenda2';
 import Detalhes from './components/Consultas/DetalhesConsula';
@@ -22,17 +28,61 @@ import Video from './components/Educacao/VerVideo';
 import Login from './components/User/Login';
 import VerDocumentos from './components/Documentos/VerDocumentos';
 import Orcamento from './components/Documentos/Orcamentos/Orcamento';
-import store from './store';
 import ProtectedRoute from './components/Routes/ProtectedRoute';
 import { Route, Switch } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import React from 'react';
 import './App.css';
 
 function App() {
+  const dispatch = useDispatch();
+  const { loading } = useSelector(state => state.loading)
+  function addAxiosInterceptors() {
+    // Add a request interceptor
+    console.log('hey');
+    axios.interceptors.request.use(config => {
+      
+      // Do something before request is sent
+      dispatch.loading.enableLoading();
+      return config;
+    }, error => {
+      // Do something with request error
+      dispatch.loading.disableLoading();
+
+      return Promise.reject(error);
+    });
+
+    // Add a response interceptor
+    axios.interceptors.response.use(response => {
+      // Any status code that lie within the range of 2xx cause this function to trigger
+      // Do something with response data
+      dispatch.loading.disableLoading();
+      return response;
+    }, error => {
+      // Any status codes that falls outside the range of 2xx cause this function to trigger
+      // Do something with response error
+      dispatch.loading.disableLoading();
+
+      // Token is invalid. Logout the user.
+      if (error.response.status === 400 && error.response.data.code === 'INVALID_HEADER') {
+        console.log('erro');
+      }
+
+      return Promise.reject(error);
+    });
+  }
+  useEffect(() => {
+    addAxiosInterceptors();
+  }, [])
+
+
   return (
-    <Provider store={store}>
-            <Switch>
+    <div>
+
+    { loading ?  <Loading /> : null }
+
+{
+  
+  <Switch>
               <Route exact path='/login' component={Login} />
               <ProtectedRoute exact path='/' component={DashBoard}/>
               <ProtectedRoute exact path='/verClientes' component={VerClientes} />
@@ -56,8 +106,9 @@ function App() {
               <ProtectedRoute exact path='/listaDeVideos' component={Videos} />
               <ProtectedRoute exact path='/video' component={Video} />
               <ProtectedRoute exact path='/verDocumentos' component={VerDocumentos} />
-            </Switch>
-    </Provider>
+              </Switch>
+            }
+            </div>
   );
 }
 

@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { useHistory } from 'react-router-dom';
 import _ from 'lodash';
 import { connect } from 'react-redux';
-import SubHeader from '../SubHeader/SubHeader';
+import { ToastContainer, toast } from 'react-toastify';
 
+import SubHeader from '../SubHeader/SubHeader';
+import { SaveButton } from '../Botoes/Botoes';
 function InserirMaterial({ inserirProduto }) {
   const [novoProduto, setProduto] = useState({
     nome: '',
@@ -14,7 +15,6 @@ function InserirMaterial({ inserirProduto }) {
   });
 
   const [newProduto, setNew] = useState(novoProduto);
-  const history = useHistory();
   useEffect(() => {
     if (!_.isEqual(newProduto, novoProduto)) {
       setProduto(newProduto);
@@ -28,12 +28,23 @@ function InserirMaterial({ inserirProduto }) {
   const handleClick = async (event) => {
     event.preventDefault();
     await inserirProduto(novoProduto);
-    history.push('/listaDeStock');
+    toast.success('Produto inserido com sucesso', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    setNew({...newProduto, nome:''});
   };
 
   return (
     <div className="page-content-wrapper">
       <SubHeader title="Serviços" />
+      <ToastContainer />
+
       <div className="page-content">
         <div className="page-bar">
           <div className="page-title-breadcrumb">
@@ -102,19 +113,8 @@ function InserirMaterial({ inserirProduto }) {
                   </div>
                 </div>
                 <div class="col-lg-12 p-t-20 text-center">
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-                    onClick={handleClick}
-                  >
-                    Submeter
-                  </button>
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
-                  >
-                    Cancelar
-                  </button>
+                <SaveButton onClick={handleClick} />
+
                 </div>
               </div>
             </div>

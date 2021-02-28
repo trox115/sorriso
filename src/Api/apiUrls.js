@@ -4,6 +4,7 @@ export const apiUrls = {
   editarCliente: '/clientes/:id',
   inserirCliente: '/inserirCliente',
   userInfo: '/userInfo/:id',
+  eliminarCliente: '/eliminar/:id',
   // Produtos
   produtos: '/produtos',
   inserirProduto: '/inserirProduto',
@@ -15,12 +16,13 @@ export const apiUrls = {
   //Servicos
   servicos: '/servicos',
   inserirServico: '/inserirServico',
-
+  eliminarServico: '/eliminarServico/:id',
   //Consultas
   consultas: '/consultas',
   inserirConsulta: '/inserirConsulta',
   editarConsulta: '/editarConsulta/:id',
   detalhesConsulta: '/detalhesConsulta',
+  inserirBocaToda: '/inserirBocaToda',
 
   //Tratamentos
   inserirTratamento: '/inserirTratamento',
