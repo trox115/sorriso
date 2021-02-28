@@ -75,6 +75,7 @@ function Editar({ getTratamentos, inserirTratamentos, ...props }) {
     const idCliente = props.cliente
     for (const [i, selecionado] of denteSelecionado.entries()) {
       let estado = 'mau';
+      console.log(i);
       if (selecionado.tipo === 1) {
         estado = 'bom';
       }
@@ -84,7 +85,6 @@ function Editar({ getTratamentos, inserirTratamentos, ...props }) {
         id: selecionado.id,
       };
       const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
-      let tratamento = null;
       if(jaExiste > -1){
         const payload2 = { id: tratamentos[jaExiste].id, estado}
        await Promise.resolve(dispatch.tratamentos.editarTratamento(payload2))

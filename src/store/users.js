@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { get, patch, post } from '../Api/api';
+import { get, patch, post, remove } from '../Api/api';
 import { apiUrls, replaceUrls } from '../Api/apiUrls';
 
 export default {
@@ -118,6 +118,18 @@ export default {
         const response = await get(replaceUrls(apiUrls.userInfo, { id }));
         if (response.status === 200) {
           this.setCliente(response.data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async eliminarCliente(payload, state) {
+      try {
+        const { id } = payload;
+        const response = await remove(replaceUrls(apiUrls.eliminarCliente, { id }));
+        if (response.status === 200) {
+          console.log('done');
         }
       } catch (error) {
         console.log(error);

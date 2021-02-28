@@ -1,5 +1,5 @@
 /* eslint-disable import/no-anonymous-default-export */
-import { get, patch, post } from '../Api/api';
+import { get, patch, post, remove } from '../Api/api';
 import { apiUrls, replaceUrls } from '../Api/apiUrls';
 
 export default {
@@ -54,6 +54,19 @@ export default {
           categoria_id: categoria,
           custo,
         });
+        if (response && response.status === 200) {
+          console.log('done');
+        }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
+
+    async apagarServico(payload, state) {
+      try {
+        const { id } = payload;
+        const response = await remove(replaceUrls(apiUrls.eliminarServico, { id }));
+        console.log(replaceUrls(apiUrls.eliminarServico, { id }));
         if (response && response.status === 200) {
           console.log('done');
         }

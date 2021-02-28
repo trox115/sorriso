@@ -1,32 +1,44 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import _ from 'lodash';
+import { useSelector, useDispatch } from 'react-redux';
 import { TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
+import { ToastContainer, toast } from 'react-toastify';
 
-function InserirServico({ categorias, inserirServico, getCategorias }) {
+import { SaveButton } from '../Botoes/Botoes';
+
+function InserirServico() {
   const [servico, setServico] = useState({
     nome: '',
     categoria: '',
     custo: '',
   });
-
+  const dispatch = useDispatch();
+  const { categorias } = useSelector(state => state.categorias)
   useEffect(() => {
-    if (_.isEmpty(categorias.categorias)) {
-      getCategorias();
-    }
-  }, [categorias, inserirServico, getCategorias]);
+    dispatch.categorias.loadCategorias();
+
+  }, [dispatch.categorias]);
 
   const handleChange = (e) => {
     e.preventDefault();
     setServico({ ...servico, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    inserirServico(servico);
-  };
+    await dispatch.servicos.inserirServico(servico);
+    toast.success('Servico inserido com sucesso', {
+      position: 'top-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  setServico({...servico, nome: ''});
+};
   return (
     <div className="page-content-wrapper">
       <div className="page-content">
@@ -35,6 +47,7 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
             <div className=" pull-left">
               <div className="page-title">Serviços</div>
             </div>
+            <ToastContainer />
             <ol className="breadcrumb page-breadcrumb pull-right">
               <li>
                 <i className="fa fa-home"></i>&nbsp;
@@ -79,7 +92,7 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
                       onChange={(event, value) =>
                         setServico({ ...servico, categoria: value.id })
                       }
-                      options={categorias.categorias}
+                      options={categorias ? categorias : null}
                       getOptionLabel={(option) => option.nome}
                       style={{ minWidth: 300 }}
                       renderInput={(params) => (
@@ -107,19 +120,7 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
                   </div>
                 </div>
                 <div class="col-lg-12 p-t-20 text-center">
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 m-r-20 btn-pink"
-                    onClick={handleSubmit}
-                  >
-                    Submeter
-                  </button>
-                  <button
-                    type="button"
-                    className="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect m-b-10 btn-default"
-                  >
-                    Cancelar
-                  </button>
+                  <SaveButton onClick={handleSubmit} />
                 </div>
               </div>
             </div>
@@ -130,14 +131,4 @@ function InserirServico({ categorias, inserirServico, getCategorias }) {
   );
 }
 
-const mapState = (state) => ({
-  categorias: state.categorias,
-  servicos: state.servicos,
-});
-
-const mapDispatch = (dispatch) => ({
-  inserirServico: (obj) => dispatch.servicos.inserirServico(obj),
-  getCategorias: () => dispatch.categorias.loadCategorias(),
-});
-
-export default connect(mapState, mapDispatch)(InserirServico);
+export default (InserirServico);

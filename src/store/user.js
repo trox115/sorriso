@@ -36,7 +36,6 @@ export default {
     async logOut(payload, state) {
       try {
         //this.setLoading(true);
-        console.log('hey')
         const response = await get(apiUrls.logout);
         if (response && response.status === 201) {
           await this.setAuth({});

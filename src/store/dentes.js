@@ -50,8 +50,9 @@ export default {
     },
     async selecionarDente(payload, state) {
       try {
-        const { tipo, id } = payload;
-        this.setSelecionado(payload);
+        const { tipo, id, servico } = payload;
+        console.log(payload)
+        this.setSelecionado({tipo, id, servico:servico.id});
         const { dentes } = JSON.parse(JSON.stringify(state.dentes));
         const index = _.findIndex(dentes, { id: id });
         dentes[index].preFillColor = tipo === 1 ? 'rgba(0, 230, 64, 0.5)' : 'rgba(0, 0, 0, 0.5)';

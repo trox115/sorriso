@@ -31,9 +31,8 @@ export async function get(url) {
   return response;
 }
 
-export async function remove(url) {
-  const response = await doDelete(url, {}, 'delete');
-  console.log(process.env.REACT_APP_BASE_URL + url);
+export async function remove(url, payload) {
+  const response = await doRequest(url, payload, 'delete');
   return response;
 }
 
@@ -59,24 +58,3 @@ async function doRequest(url, payload, method) {
   }
 }
 
-async function doDelete(url, payload, method) {
-
-const config = {
-  url: process.env.REACT_APP_BASE_URL + url,
-  method,
-  headers: {
-    'content-type': 'application/json',
-    'X-User-Email': localStorage.getItem('email'),
-    'X-User-Token': localStorage.getItem('token'),
-  },
-};
-
-try {
-  const response = await once(config, config.url.split('?')[0]);
-  return response;
-} catch (error) {
-  const { response } = error;
-
-  return response;
-}
-}

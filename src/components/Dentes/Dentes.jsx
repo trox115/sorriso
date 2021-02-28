@@ -80,37 +80,36 @@ function Editar({ ...props }) {
         formData.append('cliente_id', idCliente);
         if (props.image?.image) {
           formData.append('image', props.image.image);
-
         }
-        const consulta =  await Promise.resolve(dispatch.consultas.inserirConsulta(formData));
+         await dispatch.consultas.inserirConsulta({cliente_id:idCliente, image:props.image?.image, denteSelecionado, obs});
 
-        for (const [i, selecionado] of denteSelecionado.entries()) {
-          let estado = 'bom';
-          if (selecionado.servico.categoria_id === 2) {
-            estado = 'inexistente';
-          }
-          const payload = {
-            cliente_id: idCliente,
-            estado,
-            id: selecionado.id,
-            obs: obs[i]
-          };
-          const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
-          let tratamento = null;
-          if(jaExiste > -1){
-            const payload2 = { id: tratamentos[jaExiste].id, estado}
-            tratamento = await Promise.resolve(dispatch.tratamentos.editarTratamento(payload2))
-          }
-          else{
-            tratamento = await Promise.resolve(dispatch.tratamentos.inserirTratamentos(payload))
-          }
-          const payload3 = {
-            consulta_id:consulta.id,
-            tratamento_id:tratamento.id,
-            servico_id:selecionado.servico.id,
-          };
-          await dispatch.consultas.consultaInsertDetails(payload3)
-        }
+        // for (const [i, selecionado] of denteSelecionado.entries()) {
+        //   let estado = 'bom';
+        //   if (selecionado.servico.categoria_id === 2) {
+        //     estado = 'inexistente';
+        //   }
+        //   const payload = {
+        //     cliente_id: idCliente,
+        //     estado,
+        //     id: selecionado.id,
+        //     obs: obs[i]
+        //   };
+        //   const jaExiste = _.findIndex(tratamentos, {dente_id: selecionado.id})
+        //   let tratamento = null;
+        //   if(jaExiste > -1){
+        //     const payload2 = { id: tratamentos[jaExiste].id, estado}
+        //     tratamento = await Promise.resolve(dispatch.tratamentos.editarTratamento(payload2))
+        //   }
+        //   else{
+        //     tratamento = await Promise.resolve(dispatch.tratamentos.inserirTratamentos(payload))
+        //   }
+        //   const payload3 = {
+        //     consulta_id:consulta.id,
+        //     tratamento_id:tratamento.id,
+        //     servico_id:selecionado.servico.id,
+        //   };
+        //   await dispatch.consultas.consultaInsertDetails(payload3)
+        // }
 
         await dispatch.dentes.removeDentes();
         const obj = {};
@@ -125,7 +124,7 @@ function Editar({ ...props }) {
           };
           await dispatch.produtos.editarProdutos(payload);
         }
-        history.push('/verConsultas');
+         history.push('/verConsultas');
         
   }
 

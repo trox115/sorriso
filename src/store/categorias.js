@@ -10,7 +10,6 @@ export default {
   reducers: {
     loaded: (state, payload) => payload,
     setCategorias(state, payload) {
-      console.log(payload);
       return { ...state, categorias: payload };
     },
   },
@@ -49,7 +48,6 @@ export default {
       try {
         //this.setLoading(true);
         const { categoria } = payload;
-        console.log(payload);
         const response = await post(replaceUrls(apiUrls.inserirCategoria), {
           nome: categoria,
         });

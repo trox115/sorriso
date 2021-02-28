@@ -2,11 +2,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import EditarCliente from './EditarCliente';
 import ReactToPrint from 'react-to-print';
 import _ from 'lodash';
 import { useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
 import Table from '../../Consultas/TabelaConsultas';
+import EditarCliente from './EditarCliente';
+import { DeleteButton } from '../../Botoes/Botoes';
 const Dentes = React.lazy(() => import('./Dentes'));
 
 function Informacoes() {
@@ -14,6 +17,7 @@ function Informacoes() {
   const [boca, setBoca] = useState(false);
   const [treatTooth, setTreatTooth] = useState([]);
   const dispatch = useDispatch();
+  const history = useHistory();
   const {
     cliente,
     cliente: { tratamentos },
@@ -36,7 +40,6 @@ function Informacoes() {
         return dentes[index].coords;
       }
     }
-    console.log(cliente)
 
     const setTreated = async () => {
       const novosDentes = await tratamentos.map((v, i) => ({
@@ -62,6 +65,12 @@ function Informacoes() {
       setTreated();
     }
   }, [tratamentos, dentes, setTreatTooth, treatTooth, cliente]);
+
+  const handleDestroy = async (e) => {
+    e.preventDefault();
+    await dispatch.users.eliminarCliente({ id: match.params.id })
+    history.push('/verClientes');
+  }
 
   return (
     <div className="page-content-wrapper">
@@ -148,6 +157,9 @@ function Informacoes() {
                           Notas{' '}
                         </a>
                       </li>
+                      <li className="nav-item">
+                        <DeleteButton onClick = {handleDestroy}/>
+                      </li>
                     </ul>
                   </div>
                   <div className="col-md-9 col-sm-9 col-9">
@@ -210,16 +222,6 @@ function Informacoes() {
                             content={() => inputEl.current}
                           />
                         </div>
-                        <Suspense fallback={<div> Loading </div>}>
-                          {/* {servico && (
-                            <Fatura
-                              ref={inputEl}
-                              orcamento={cliente.orcamentos[0]}
-                              utilizador={cliente.cliente}
-                              servico={servico}
-                            />
-                          )} */}
-                        </Suspense>
                       </div>
                     </div>
                   </div>

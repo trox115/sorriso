@@ -58,7 +58,7 @@ export default {
       try {
         //this.setLoading(true);
         const { id } = payload;
-        const response = await get(replaceUrls(apiUrls.orcamento, { id }))
+        const response = await get(replaceUrls(apiUrls.orcamento, { id }));
         if (response && response.status === 200) {
           console.log(response);
           this.setOrcamento(response.data);
@@ -87,10 +87,11 @@ export default {
         //this.setLoading(true);
         const { id, nome, quantidade, custo } = payload;
         console.log(payload);
-        const response = await patch(
-          replaceUrls(apiUrls.editarDocumento, { id }),
-          { nome, quantidade, custo }
-        );
+        const response = await patch(replaceUrls(apiUrls.editarDocumento, { id }), {
+          nome,
+          quantidade,
+          custo,
+        });
         if (response && response.status === 200) {
           console.log('done');
         }
@@ -116,20 +117,19 @@ export default {
       }
     },
 
-    
     async inserirOrcamentoDetails(payload, state) {
-      console.log(payload);
       try {
         //this.setLoading(true);
-        const { dente_id, orcamento_id, servico_id } = payload;
-        console.log(payload)
+        const { dente_id, orcamento_id, servico_id, detalhes } = payload;
+        console.log(payload);
         const response = await post(replaceUrls(apiUrls.inserirOrcamentoDetails), {
           dente_id,
           orcamento_id,
           servico_id,
+          detalhes,
         });
         if (response && response.status === 200) {
-          console.log(response)
+          console.log(response);
           return response.data;
         }
       } catch (error) {
@@ -140,15 +140,17 @@ export default {
       console.log(payload);
       try {
         //this.setLoading(true);
-        const { cliente, categoria, servico } = payload;
-        console.log(payload)
+        const { cliente, categoria, servico, detalhes } = payload;
         const response = await post(replaceUrls(apiUrls.inserirOrcamento), {
-          cliente_id: cliente,
-          doc_categoria_id: categoria,
-          servico_id: servico,
+          orcamento: {
+            cliente_id: cliente,
+            doc_categoria_id: categoria,
+            servico_id: servico,
+            detalhes,
+          },
         });
         if (response && response.status === 200) {
-          console.log(response)
+          console.log(response);
           return response.data;
         }
       } catch (error) {

@@ -38,7 +38,24 @@ export default {
         console.log(payload);
         const response = await patch(
           replaceUrls(apiUrls.editarConsulta, { id }),
-          { pagamento }
+          { consulta:{ pagamento } }
+        );
+        if (response && response.status === 200) {
+          console.log('done');
+        }
+      } catch (error) {
+        //TODO: HANDLE ERROR
+      }
+    },
+
+    async inserirBocaToda(payload, state) {
+      try {
+        //this.setLoading(true);
+        const { cliente_id, servico_id, obs } = payload;
+        console.log(payload);
+        const response = await post(
+          replaceUrls(apiUrls.inserirBocaToda),
+          { consulta:{ cliente_id, servico_id, obs } }
         );
         if (response && response.status === 200) {
           console.log('done');
@@ -53,7 +70,7 @@ export default {
         console.log(payload)
         const response = await post(
           replaceUrls(apiUrls.inserirConsulta),
-          payload
+          {consulta:payload }
         );
         if (response && response.status === 200) {
           return response.data;
@@ -61,26 +78,6 @@ export default {
       } catch (error) {
         //TODO: HANDLE ERROR
       }
-    },
-
-    async consultaInsertDetails(payload, state) {
-      try {
-        const response = await post(
-          replaceUrls(apiUrls.detalhesConsulta),
-          payload
-        );
-        if (response && response.status === 200) {
-          return response.data;
-        }
-      } catch (error) {
-        //TODO: HANDLE ERROR
-      }
-    },
-    async inserirNovaConsulta(payload, state) {
-      fetch('http://localhost:3001/inserirConsulta', {
-        method: 'POST',
-        data: payload,
-      }).catch((error) => console.log(error));
     },
   }),
 };

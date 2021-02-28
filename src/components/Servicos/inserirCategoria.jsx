@@ -24,6 +24,7 @@ function InserirCategoria({ inserirCategorias }) {
       draggable: true,
       progress: undefined,
     });
+    setCategoria('');
   };
 
   return (
