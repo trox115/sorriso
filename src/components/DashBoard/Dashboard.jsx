@@ -7,9 +7,12 @@ import { Link } from 'react-router-dom';
 export default function DashBoard() {
   const dispatch = useDispatch()
   const {dashboard} = useSelector(state => state.videos)
+  const { users } = useSelector(state => state.users)
+
   useEffect(() => {
     dispatch.videos.getDashboard();
-  }, [dispatch.videos])
+    dispatch.users.loadClientes();
+  }, [dispatch.users, dispatch.videos])
   const diferencaMar = 0
   return (
     <div className="page-content-wrapper">
@@ -56,7 +59,7 @@ export default function DashBoard() {
                   <i className="material-icons">card_travel</i>
                 </span>
                 <div className="info-box-content">
-                  <span className="info-box-text">Orçamentos realizados</span>
+                  <span className="info-box-text">Orçamentos</span>
                   <span className="info-box-number">{dashboard.orcamentos}</span>
                   <div className="progress">
                     <div className="progress-bar width-40"></div>
@@ -90,11 +93,11 @@ export default function DashBoard() {
                   <i className="material-icons">monetization_on</i>
                 </span>
                 <div className="info-box-content">
-                  <span className="info-box-text">Total de ganhos</span>
-                  <span className="info-box-number">13,921</span>
-                  <span>€</span>
+                  <span className="info-box-text">Clientes</span>
+                  <span className="info-box-number">{users?.length} </span>
+                  <span></span>
                   <div className="progress">
-                    <div className="progress-bar width-60"></div>
+                    <div className="progress-bar width-100"></div>
                   </div>
                   <span className="progress-description">
                     100% + que no ano passado

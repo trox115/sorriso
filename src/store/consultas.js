@@ -35,7 +35,6 @@ export default {
       try {
         //this.setLoading(true);
         const { id, pagamento } = payload;
-        console.log(payload);
         const response = await patch(
           replaceUrls(apiUrls.editarConsulta, { id }),
           { consulta:{ pagamento } }

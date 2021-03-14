@@ -4,7 +4,6 @@ import axios from 'axios';
 import {useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 
-import NovaMarcacao from './components/Marcacoes/NovaMarcacao';
 import NovoCliente from './components/Clientes/NovoCliente';
 import VerClientes from './components/Clientes/VerClientes';
 import Informacoes from './components/Clientes/Individual/Informacoes';
@@ -86,7 +85,6 @@ function App() {
               <Route exact path='/login' component={Login} />
               <ProtectedRoute exact path='/' component={DashBoard}/>
               <ProtectedRoute exact path='/verClientes' component={VerClientes} />
-              <ProtectedRoute exact path='/novaMarcacao' component={NovaMarcacao} />
               <ProtectedRoute exact path='/agenda' component={Agenda2} />
               <ProtectedRoute exact path='/NovoCliente' component={NovoCliente} />
               <ProtectedRoute exact path='/cliente/:id' component={Informacoes} />

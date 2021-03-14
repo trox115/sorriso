@@ -1,14 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
+import React, {useEffect} from 'react';
 import logo2 from '../../img/logo2.png';
-import {useDispatch } from 'react-redux'
+import {useDispatch, useSelector } from 'react-redux'
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+
+import './Nav.css';
 export default function TopNav() {
   const dispatch = useDispatch();
+  const history= useHistory();
+  const { users } = useSelector(state => state.users)
+  console.log(users);
+
+  useEffect(() => {
+    dispatch.users.loadClientes();
+  }, [])
 
   const handleLogout = (e) => {
     dispatch.user.logOut();
   }
+
   return (
     <div className="page-header navbar navbar-fixed-top">
       <div className="page-header-inner ">
@@ -24,20 +38,20 @@ export default function TopNav() {
             </a>
           </li>
         </ul>
-        <form className="search-form-opened" action="#" method="GET">
-          <div className="input-group">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Pesquisa..."
-              name="query"
-            />
-            <span className="input-group-btn search-btn">
-              <a href="javascript:;" className="btn submit">
-                <i className="icon-magnifier"></i>
-              </a>
-            </span>
-          </div>
+        <form className="search-form-opened" style = {{border: 'none'}} action="#" method="GET">
+            <Autocomplete
+          options={users}
+          getOptionLabel={(option) => option.nome}
+          style={{ minWidth: 300,
+            marginTop: -20,
+            height: 50,
+           }}
+          onChange={(event, value) => history.push(`/cliente/${value?.id}`)}
+          className="form-control"
+          renderInput={(params) => (
+            <TextField {...params} label="Pesquisa" variant="outlined" />
+          )}
+        />
         </form>
 
         <a
