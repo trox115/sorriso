@@ -31,6 +31,9 @@ function Informacoes() {
       await dispatch.dentes.loadDentes();
     };
     loadCliente();
+    return () => {
+      dispatch.users.deleteUserInfo({});
+    }
   }, [dispatch.dentes, dispatch.users, match.params.id]);
 
   useEffect(() => {

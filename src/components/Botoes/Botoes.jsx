@@ -44,6 +44,36 @@ export function SendButton() {
   )
 }
 
+export function FaltaButton() {
+  const classes = useStyles();
+
+  return (
+    <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        endIcon={<Icon>send</Icon>}
+      >
+        Marcar Falta
+      </Button>
+  )
+}
+
+export function CancelouButton() {
+  const classes = useStyles();
+
+  return (
+    <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        endIcon={<Icon>send</Icon>}
+      >
+        Cancelou
+      </Button>
+  )
+}
+
 export function SaveButton({ onClick }) {
   const classes = useStyles();
 

@@ -164,7 +164,7 @@ export default function NavigationMenu() {
               </ul>
             </li>
             <li className="nav-item">
-              <a href="#" className="nav-link nav-toggle">
+              <a href="/agenda" className="nav-link nav-toggle">
                 <DateRangeIcon
                   style={{ marginRight: '5px', marginBottom: '3px' }}
                 />
@@ -172,11 +172,6 @@ export default function NavigationMenu() {
                 <span className="arrow"></span>
               </a>
               <ul className="sub-menu">
-                <li className="nav-item">
-                  <a href="/novaMarcacao" className="nav-link">
-                    <span className="title">Nova Marcação</span>
-                  </a>
-                </li>
                 <li className="nav-item">
                   <a href="/agenda" className="nav-link">
                     <span className="title">Agenda</span>

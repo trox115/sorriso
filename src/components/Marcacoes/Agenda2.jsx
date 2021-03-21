@@ -112,10 +112,12 @@ function Agenda2({
   }, [getClientes, loadMarcacoes, marcacoes, users]);
 
   useEffect(() => {}, [newEvent, events]);
+
   const remove = async (e) => {
     await dispatch.marcacoes.removerMarcao({id:newEvent.id});
         setOpenEdit(false);
   }
+
   const handleChange = async (e) => {
     const uId = users.users[users.users.length - 1].id + 1;
     if (novoUser.nome !== null) {
@@ -128,6 +130,7 @@ function Agenda2({
           nome: novoUser.nome,
         },
       });
+      setUser({nome:null})
     }
     const color = handleEventColor(newEvent.tipo)
     const marcacao = {
@@ -164,6 +167,12 @@ function Agenda2({
       case 'psicologia':
         return 'rgba(52, 73, 94, 1)'
 
+      case 'faltou':
+        return 'rgba(0, 0, 0, 1)'
+
+      case 'desmarcou':
+        return 'rgba(233, 212, 96, 1)'
+
       default:
         return 'rgba(34, 167, 240, 1)'
     }
@@ -181,7 +190,6 @@ function Agenda2({
   const classes = useStyles();
 
   const clickEvent = (eventClickInfo) => {
-    console.log(eventClickInfo);
     setNewEvent({
       id: parseInt(eventClickInfo.event.id, 10),
       cliente: eventClickInfo.event.title,
@@ -201,7 +209,18 @@ function Agenda2({
     editarmarcacoes(payload);
   };
 
-  
+  const handleDesmarcou = async (e) => {
+    await editarmarcacoes({id: newEvent.id, tipo:'desmarcou'});
+        setOpenEdit(false);
+    await loadMarcacoes()
+  }
+
+  const handleFalta= async (e) => {
+    await editarmarcacoes({id: newEvent.id, tipo:'faltou'});
+        setOpenEdit(false);
+    await loadMarcacoes()
+  }
+
 
   const body = (
     <div style={modalStyle} className={classes.paper}>
@@ -380,6 +399,8 @@ function Agenda2({
       </MuiPickersUtilsProvider>
       <br></br>
       <SaveButton onClick={handleChange} />
+      <button onClick={handleFalta}>Marcar Falta </button>
+      <button onClick={handleDesmarcou} > Desmarcou </button>
       <DeleteButton onClick={remove} />
 
     </div>

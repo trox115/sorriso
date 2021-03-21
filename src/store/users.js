@@ -124,6 +124,14 @@ export default {
       }
     },
 
+    async deleteUserInfo(payload, state) {
+      try {
+          await this.setCliente({});
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async eliminarCliente(payload, state) {
       try {
         const { id } = payload;
